@@ -13,13 +13,13 @@ public class SiteUser {
 
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private  String username;
 
     private String password;
 
 
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private  String nickname;
 }

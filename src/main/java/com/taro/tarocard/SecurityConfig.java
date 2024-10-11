@@ -17,18 +17,22 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
-                .formLogin((formLogin) -> formLogin
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers("/user/login", "/user/signup", "/main").permitAll() // 로그인, 회원가입, 메인 페이지는 허용
+                        .anyRequest().authenticated() // 나머지 요청은 인증 필요
+                )
+                .formLogin(formLogin -> formLogin
                         .loginPage("/user/login")
-                        .defaultSuccessUrl("/main"))
-                .logout((logout) -> logout
+                        .defaultSuccessUrl("/main", true) // 로그인 성공 후 메인 페이지로 리다이렉트
+                )
+                .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                        .logoutSuccessUrl("/main")
-                        .invalidateHttpSession(true))
-        ;
+                        .logoutSuccessUrl("/user/login") // 로그아웃 후 로그인 페이지로 리다이렉트
+                        .invalidateHttpSession(true)
+                );
         return http.build();
     }
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

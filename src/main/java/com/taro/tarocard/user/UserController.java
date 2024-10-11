@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -55,8 +56,20 @@ public class UserController {
         return "login_form";
     }
 
-    @GetMapping("/profile")
-    public String profile(Model model){
-        return "profile_form";
+
+
+    @GetMapping("/main")
+    public String mainPage(Model model) {
+        SiteUser user = userService.getCurrentUser(); // 현재 로그인한 사용자 정보 가져오기
+        if (user != null) {
+            model.addAttribute("user", user); // 사용자 정보를 모델에 추가
+            System.out.println("Logged in user ID: " + user.getId()); // 로그 추가
+        } else {
+            System.out.println("User is not logged in"); // 로그 추가
+            return "redirect:/user/login"; // 로그인 페이지로 리다이렉트
+        }
+        return "main_page"; // 메인 페이지 템플릿 반환
     }
+
+
 }
