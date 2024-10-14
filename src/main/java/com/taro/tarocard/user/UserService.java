@@ -43,5 +43,15 @@ public class UserService {
         return null; // 로그인하지 않은 경우
     }
 
+    public void updateUserProfile(SiteUser user) {
+        userRepository.save(user); // user 객체를 데이터베이스에 저장하여 업데이트
+    }
+    @Transactional(readOnly = true)
+    public SiteUser getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    }
+
+
 
 }

@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,12 +14,17 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true) // 메서드 레벨 보안 사용
 public class SecurityConfig {
+
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf().disable() // CSRF 보호 비활성화 (테스트 용도)
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers("/user/login", "/user/signup", "/main").permitAll() // 로그인, 회원가입, 메인 페이지는 허용
+                        .requestMatchers("/profile/update").authenticated() // 프로필 업데이트 경로 인증 필요
+                        .requestMatchers("/profile/**").authenticated() // 모든 프로필 관련 URL에 대해 인증 필요
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 )
                 .formLogin(formLogin -> formLogin
@@ -30,18 +36,17 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/user/login") // 로그아웃 후 로그인 페이지로 리다이렉트
                         .invalidateHttpSession(true)
                 );
+
         return http.build();
     }
 
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
-
-
