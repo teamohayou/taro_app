@@ -1,20 +1,30 @@
 package com.taro.tarocard.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@RequiredArgsConstructor
+
 @Controller
+@RequestMapping("/profile") // 공통 경로 지정
 public class ProfileController {
-    private final ProfileService profileService;
-    private final UserService userService;
 
-    // 현재 로그인한 사용자의 프로필 보기
-    @GetMapping("/profile")
+    private final UserService userService;
+    private final ProfileService profileService;
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public ProfileController(UserService userService, ProfileService profileService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.profileService = profileService;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @GetMapping
     public String viewProfile(Model model) {
         SiteUser user = userService.getCurrentUser(); // 현재 로그인한 사용자 정보 가져오기
         if (user == null) {
@@ -25,8 +35,8 @@ public class ProfileController {
     }
 
     // 특정 사용자의 프로필 보기
-    @GetMapping("/profile/{id}")
-    public String viewProfiles(@PathVariable Long id, Model model) {
+    @GetMapping("/{id}")
+    public String viewProfiles(@PathVariable("id") Long id, Model model) {
         try {
             SiteUser user = userService.getUserProfile(id);
             model.addAttribute("user", user);
@@ -37,26 +47,48 @@ public class ProfileController {
         }
     }
 
-    // 프로필 업데이트 처리
-    @GetMapping("/profile/update")
+    // 프로필 업데이트 폼 보기
+    @GetMapping("/update")
     public String showUpdateProfileForm(Model model) {
         SiteUser currentUser = userService.getCurrentUser();
-        if(currentUser==null){
+        if (currentUser == null) {
             return "redirect:/user/login";
         }
-        model.addAttribute("user",currentUser);
-        return "profile_update_form";
+        model.addAttribute("user", currentUser);
+        return "profile_update_form"; // 프로필 업데이트 폼 템플릿
     }
 
-    @PostMapping("/profile/update")
-    public String updateProfile(SiteUser updateUser,String newPassword,Model model){
-        SiteUser currentUser = userService.getCurrentUser();
-        if(currentUser == null){
-            return "redirect:/user/login";
+    // 프로필 업데이트 처리
+    @PostMapping("/update")
+    public String updateProfile(
+            @RequestParam(name = "id") Long id,
+            @RequestParam(name = "nickname") String nickname,
+            @RequestParam(name = "password", required = false) String password,
+            RedirectAttributes redirectAttributes) {
+        try {
+            System.out.println("Updating profile for ID: " + id + ", Nickname: " + nickname);
+
+            SiteUser user = userService.getUserById(id);
+            if (user == null) {
+                throw new IllegalArgumentException("User not found for ID: " + id);
+            }
+
+            user.setNickname(nickname);
+
+            if (password != null && !password.isEmpty()) {
+                user.setPassword(passwordEncoder.encode(password));
+            }
+
+            profileService.updateUserProfile(user);
+
+            // 성공 메시지 추가
+            redirectAttributes.addFlashAttribute("successMessage", "프로필이 성공적으로 업데이트되었습니다!");
+
+            return "redirect:/profile/" + user.getId();
+        } catch (Exception e) {
+            System.err.println("Error updating profile: " + e.getMessage());
+            e.printStackTrace();
+            return "error_page";
         }
-        if(newPassword != null && )
     }
-
-
-
 }
