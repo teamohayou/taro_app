@@ -59,17 +59,20 @@
                     let starImages = '';
                     for (let i = 0; i < 5; i++) {
                         if (i < feedback.rating) {
-                            starImages += `<img src="star filled.png" class="star" alt="Star filled">`;
+                            starImages += `<img src="star_filled.png" class="star" alt="Star filled">`;
                         } else {
-                            starImages += `<img src="star empty.png" class="star" alt="Star empty">`;
+                            starImages += `<img src="star_empty.png" class="star" alt="Star empty">`;
                         }
                     }
+
+                    // Check if profileImageUrl exists; if not, use a default image
+                    const profileImageUrl = feedback.profileImageUrl || 'default_profile.png'; // 기본 이미지 설정
 
                     let feedbackCard = `
                         <div class="card mb-3" id="feedback-${feedback.id}">
                             <div class="card-body">
                                 <div class="d-flex align-items-center">
-                                    <img src="${feedback.profileImageUrl}" class="rounded-circle mr-3" width="50" height="50" alt="Profile">
+                                    <img src="${profileImageUrl}" class="rounded-circle mr-3" width="50" height="50" alt="Profile">
                                     <h5 class="card-title mb-0">${feedback.nickname}</h5>
                                 </div>
                                 <p class="card-text">${feedback.content}</p>
