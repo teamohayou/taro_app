@@ -3,11 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>프로필 보기</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>프로필</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #ffb6c1, #ff77ff); /* 배경 색상 그라데이션 */
+            height: 100vh; /* 전체 화면 높이 */
+            margin: 0; /* 기본 마진 제거 */
+            display: flex; /* Flexbox 사용 */
+            flex-direction: column; /* 세로 방향 정렬 */
+            align-items: center; /* 수평 중앙 정렬 */
+        }
+        .container {
+            width: 100%; /* 전체 너비 사용 */
+            max-width: 900px; /* 최대 너비 설정 (조금 더 넓게 조정) */
+            padding: 30px; /* 패딩 추가 */
+            border-radius: 8px; /* 둥근 모서리 */
+            background-color: rgba(255, 255, 255, 0.4); /* 더 투명한 흰색 배경 */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+        }
+        .btn {
+            background-color: transparent;
+            border: 1px solid #000;
+            color: #000;
+            width: 30%; /* 버튼 너비를 현재 크기의 30%로 설정 */
+            margin: 10px auto; /* 버튼 간 간격 유지 및 중앙 정렬 */
+            padding: 5px; /* 버튼 패딩 추가 */
+        }
+        .btn:hover {
+            background-color: rgba(0, 0, 0, 0.1); /* 버튼 호버 색상 */
+        }
+        .history-card {
+            display: flex; /* 플렉스 박스 사용 */
+            justify-content: space-between; /* 카드 이미지 사이의 공간 배분 */
+            margin: 10px 0; /* 위 아래 여백 */
+        }
+        .history-card img {
+            width: 16.67%; /* 카드 이미지 너비 설정 (원래 크기의 3/2) */
+            height: auto; /* 비율 유지 */
+            margin: 0 10px; /* 이미지 간 간격 유지 */
+        }
+        .button-group {
+            display: flex; /* 플렉스 박스 사용 */
+            justify-content: center; /* 버튼 간 중앙 정렬 */
+            width: 100%; /* 버튼 전체 너비 사용 */
+            margin-top: 10px; /* 버튼과 카드 사이에 여백 추가 */
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-5">
+<div class="container">
     <h2>프로필</h2>
 
     <!-- 성공 메시지 출력 -->
@@ -15,16 +60,81 @@
         <span th:text="${successMessage}"></span>
     </div>
 
+    <!-- 프로필 정보 -->
     <div class="mb-3">
         <label class="form-label">닉네임:</label>
         <span th:text="${user.nickname}"></span>
     </div>
 
-    <!-- 프로필 정보 -->
-    <!-- 여기에 사용자 정보를 보여주는 코드를 넣으세요 -->
-
+    <!-- 프로필 수정 버튼 -->
     <a href="/profile/update" class="btn btn-primary">프로필 수정</a>
     <a href="/main" class="btn btn-info">홈으로</a> <!-- 홈으로 버튼 추가 -->
+
+    <hr>
+
+    <!-- 히스토리 섹션 -->
+    <h3>히스토리</h3>
+    <div class="history-card">
+        <img src="https://ifh.cc/g/oC8JHo.webp" alt="Card Image" class="card-img">
+        <img src="https://ifh.cc/g/oC8JHo.webp" alt="Card Image" class="card-img">
+    </div>
+
+    <div class="button-group">
+        <button class="btn btn-secondary" id="prev-history-btn">이전 히스토리</button>
+        <button class="btn btn-secondary" id="next-history-btn">다음 히스토리</button>
+    </div>
+
+    <hr>
+
+    <!-- 마이 리뷰 섹션 -->
+    <h3>마이 리뷰</h3>
+    <div class="reviews-section">
+        <!-- 리뷰 카드 -->
+        <div class="review-card">
+            <p><strong>user123:</strong> Great experience! Highly recommended.</p>
+            <p>★★★★★</p>
+        </div>
+        <div class="review-card">
+            <p><strong>user456:</strong> Satisfied with the service.</p>
+            <p>★★★★☆</p>
+        </div>
+        <!-- 더 많은 리뷰가 있는 경우 페이지네이션이나 스크롤을 추가할 수 있습니다 -->
+    </div>
+
 </div>
+
+<!-- JavaScript (옵션) - 히스토리 카드 이전/다음으로 이동 -->
+<script>
+    let currentCardIndex = 0;
+    const historyCards = [
+        { img: 'https://ifh.cc/g/oC8JHo.webp' },
+        { img: 'https://ifh.cc/g/oC8JHo.webp' }
+        // 추가적인 히스토리 카드 내용을 여기에 추가할 수 있습니다.
+    ];
+
+    const cardImgElements = document.querySelectorAll('.history-card img');
+
+    function updateCard() {
+        for (let i = 0; i < cardImgElements.length; i++) {
+            cardImgElements[i].src = historyCards[currentCardIndex].img;
+        }
+    }
+
+    document.getElementById('prev-history-btn').addEventListener('click', function() {
+        if (currentCardIndex > 0) {
+            currentCardIndex--;
+            updateCard();
+        }
+    });
+
+    document.getElementById('next-history-btn').addEventListener('click', function() {
+        if (currentCardIndex < historyCards.length - 1) {
+            currentCardIndex++;
+            updateCard();
+        }
+    });
+
+    updateCard(); // 처음에 카드 업데이트 호출
+</script>
 </body>
 </html>
