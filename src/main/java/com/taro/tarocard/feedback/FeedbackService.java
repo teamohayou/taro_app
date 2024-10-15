@@ -34,7 +34,7 @@ public class FeedbackService {
     }
 
     public List<FeedbackResponse> getAllFeedbacks() {
-        return feedbackRepository.findAll().stream()
+        return feedbackRepository.findAllByOrderByIdDesc().stream() // 여기에서 메서드 호출
                 .map(feedback -> new FeedbackResponse(
                         feedback.getId(),
                         feedback.getUser().getNickname(),
@@ -76,10 +76,17 @@ public class FeedbackService {
         comment.setContent(commentRequest.getContent());
         commentRepository.save(comment);
     }
+
     public void likeFeedback(String username, Long feedbackId) {
         Feedback feedback = feedbackRepository.findById(feedbackId)
                 .orElseThrow(() -> new RuntimeException("Feedback not found"));
         feedback.setLikes(feedback.getLikes() + 1);
         feedbackRepository.save(feedback);
+    }
+
+    public void deleteFeedback(Long feedbackId) {
+        Feedback feedback = feedbackRepository.findById(feedbackId)
+                .orElseThrow(() -> new RuntimeException("Feedback not found"));
+        feedbackRepository.delete(feedback);
     }
 }

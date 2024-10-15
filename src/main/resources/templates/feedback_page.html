@@ -6,6 +6,15 @@
     <title>Feedback Page</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+        .star-rating {
+            display: flex;
+        }
+        .star {
+            width: 20px; /* 별 이미지 너비 */
+            height: 20px; /* 별 이미지 높이 */
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-5">
@@ -47,17 +56,28 @@
                 let feedbackList = $('#feedbackList');
                 feedbackList.empty();
                 data.forEach(function(feedback) {
+                    let starImages = '';
+                    for (let i = 0; i < 5; i++) {
+                        if (i < feedback.rating) {
+                            starImages += `<img src="star filled.png" class="star" alt="Star filled">`;
+                        } else {
+                            starImages += `<img src="star empty.png" class="star" alt="Star empty">`;
+                        }
+                    }
+
                     let feedbackCard = `
-                        <div class="card mb-3">
+                        <div class="card mb-3" id="feedback-${feedback.id}">
                             <div class="card-body">
                                 <div class="d-flex align-items-center">
                                     <img src="${feedback.profileImageUrl}" class="rounded-circle mr-3" width="50" height="50" alt="Profile">
                                     <h5 class="card-title mb-0">${feedback.nickname}</h5>
                                 </div>
                                 <p class="card-text">${feedback.content}</p>
-                                <p class="text-muted">Rating: ${feedback.rating} ⭐ | Likes: ${feedback.likes}</p>
+                                <div class="star-rating">${starImages}</div>
+                                <p class="text-muted">Likes: ${feedback.likes}</p>
                                 <button class="btn btn-outline-primary btn-sm" onclick="likeFeedback(${feedback.id})">Like</button>
                                 <button class="btn btn-outline-secondary btn-sm" onclick="toggleCommentForm(${feedback.id})">Comment</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteFeedback(${feedback.id})">Delete</button>
 
                                 <!-- Comment Form -->
                                 <div id="commentForm-${feedback.id}" class="mt-2" style="display: none;">
@@ -125,6 +145,20 @@
                 success: function() {
                     $(`#commentContent-${feedbackId}`).val('');
                     loadFeedbacks();
+                }
+            });
+        }
+
+        // Function to delete feedback
+        function deleteFeedback(feedbackId) {
+            $.ajax({
+                url: `/api/feedback/${feedbackId}`,
+                type: 'DELETE', // DELETE 메서드로 요청
+                success: function() {
+                    $(`#feedback-${feedbackId}`).remove(); // UI에서 피드백 카드 삭제
+                },
+                error: function() {
+                    alert('Error deleting feedback.');
                 }
             });
         }

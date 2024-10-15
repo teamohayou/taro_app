@@ -56,4 +56,11 @@ public class FeedbackController {
         FeedbackDetailResponse feedbackDetail = feedbackService.getFeedbackDetail(feedbackId);
         return ResponseEntity.ok(feedbackDetail);
     }
+
+    // DELETE 메서드로 수정
+    @DeleteMapping("/{feedbackId}") // 변경된 부분
+    public ResponseEntity<String> deleteFeedback(@PathVariable Long feedbackId) {
+        feedbackService.deleteFeedback(feedbackId);
+        return ResponseEntity.ok("Feedback deleted successfully.");
+    }
 }
