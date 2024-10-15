@@ -1,18 +1,59 @@
 package com.taro.tarocard.feedback;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.taro.tarocard.feedback.FeedbackDTO.FeedbackRequest;
+import com.taro.tarocard.feedback.FeedbackDTO.FeedbackResponse;
+import com.taro.tarocard.feedback.FeedbackDTO.CommentRequest;
+import com.taro.tarocard.feedback.FeedbackDTO.FeedbackDetailResponse;
 
-@Controller
-@RequiredArgsConstructor
-@RequestMapping("/feedback")
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/feedback")
 public class FeedbackController {
-    private final FeedbackService feedbackService;
+
+    @Autowired
+    private FeedbackService feedbackService;
+
+    @PostMapping("/write")
+    public ResponseEntity<String> writeFeedback(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody FeedbackRequest feedbackRequest) {
+        feedbackService.writeFeedback(userDetails.getUsername(), feedbackRequest);
+        return ResponseEntity.ok("Feedback submitted successfully.");
+    }
 
     @GetMapping("/list")
-    public String list () {
-        return "main_page.";
+    public ResponseEntity<List<FeedbackResponse>> getAllFeedbacks() {
+        List<FeedbackResponse> feedbacks = feedbackService.getAllFeedbacks();
+        return ResponseEntity.ok(feedbacks);
+    }
+
+    @PostMapping("/{feedbackId}/comment")
+    public ResponseEntity<String> writeComment(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long feedbackId,
+            @RequestBody CommentRequest commentRequest) {
+        feedbackService.writeComment(userDetails.getUsername(), feedbackId, commentRequest);
+        return ResponseEntity.ok("Comment submitted successfully.");
+    }
+
+    @PostMapping("/{feedbackId}/like")
+    public ResponseEntity<String> likeFeedback(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long feedbackId) {
+        feedbackService.likeFeedback(userDetails.getUsername(), feedbackId);
+        return ResponseEntity.ok("Feedback liked successfully.");
+    }
+
+    @GetMapping("/{feedbackId}")
+    public ResponseEntity<FeedbackDetailResponse> getFeedbackDetail(@PathVariable Long feedbackId) {
+        FeedbackDetailResponse feedbackDetail = feedbackService.getFeedbackDetail(feedbackId);
+        return ResponseEntity.ok(feedbackDetail);
     }
 }

@@ -9,7 +9,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(22)
+		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
 
@@ -38,6 +38,8 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	implementation 'org.projectlombok:lombok:1.18.24' // 최신 버전으로 변경
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 tasks.named('test') {
