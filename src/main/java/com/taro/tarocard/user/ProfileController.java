@@ -64,26 +64,33 @@ public class ProfileController {
             @RequestParam(name = "id") Long id,
             @RequestParam(name = "nickname") String nickname,
             @RequestParam(name = "password", required = false) String password,
+            @RequestParam(name = "confirmPassword", required = false) String confirmPassword,
             RedirectAttributes redirectAttributes) {
         try {
             System.out.println("Updating profile for ID: " + id + ", Nickname: " + nickname);
 
+            // 사용자 정보 가져오기
             SiteUser user = userService.getUserById(id);
             if (user == null) {
                 throw new IllegalArgumentException("User not found for ID: " + id);
             }
 
+            // 닉네임 업데이트
             user.setNickname(nickname);
 
+            // 비밀번호 변경 로직
             if (password != null && !password.isEmpty()) {
+                if (!password.equals(confirmPassword)) {
+                    throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+                }
                 user.setPassword(passwordEncoder.encode(password));
             }
 
+            // 사용자 프로필 업데이트
             profileService.updateUserProfile(user);
 
             // 성공 메시지 추가
             redirectAttributes.addFlashAttribute("successMessage", "프로필이 성공적으로 업데이트되었습니다!");
-
             return "redirect:/profile/" + user.getId();
         } catch (Exception e) {
             System.err.println("Error updating profile: " + e.getMessage());
