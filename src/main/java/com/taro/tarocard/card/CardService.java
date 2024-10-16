@@ -9,6 +9,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CardService {
     private final CardRepository cardRepository;
+    private JdbcTemplate jdbcTemplate;
+    private final RomanticCardRepository romanticCardRepository;
+    private final CategoryRepository categoryRepository;
 
     public List<Card> getCard () {
         return this.cardRepository.findAll();
@@ -16,4 +19,23 @@ public class CardService {
     public Card getCardById (Integer id){
         return this.cardRepository.findAllById(id);
     }
+
+    public List<RomanticCard> getCardByRcCardId(Integer rcCardId){
+        return romanticCardRepository.findAllByCardId(rcCardId);
+    }
+
+    public List<RomanticCard> getRandomRomanticCard() {
+        List<RomanticCard> rcCard = romanticCardRepository.findAll();
+        System.out.println("Fetched Cards: " + rcCard);
+        Collections.shuffle(rcCard);
+        return rcCard;
+    }
+
+    public List<Category> getAllCategories () {
+        return categoryRepository.findAll();
+    }
+    public List<Category> getCategoryByName(String categoryname){
+        return categoryRepository.findByCategoryname(categoryname);
+    }
+
 }

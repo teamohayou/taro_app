@@ -7,19 +7,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Card {
+@Table(name = "romantic_card")
+public class RomanticCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "cardname", nullable = false, unique = true)
-    private String cardname;
+    @Column(name = "card_id")
+    private Integer cardId;
+
+    @Column(name = "categoryname")
+    private String categoryname;
 
     @Column(name = "description")
     private String description;
-
-    @Column(name = "categoryname")
-    private String category;
-
-
 }
