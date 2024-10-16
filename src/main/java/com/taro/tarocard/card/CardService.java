@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +23,8 @@ public class CardService {
         return this.cardRepository.findAllById(id);
     }
 
-    public List<RomanticCard> getCardByRcCardId(Integer rcCardId){
-        return romanticCardRepository.findAllByCardId(rcCardId);
+    public Optional<RomanticCard> getCardByRcCardId(Integer rcCardId){
+        return romanticCardRepository.findAllByRcid(rcCardId);
     }
 
     public List<RomanticCard> getRandomRomanticCard() {

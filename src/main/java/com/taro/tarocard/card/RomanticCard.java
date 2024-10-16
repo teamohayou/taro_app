@@ -11,7 +11,7 @@ import lombok.Setter;
 public class RomanticCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer rcid;
 
     @Column(name = "card_id")
     private Integer cardId;

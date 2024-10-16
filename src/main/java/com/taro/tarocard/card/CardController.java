@@ -35,17 +35,14 @@ public class CardController {
         return "cardchoise_page";
     }
 
-    @GetMapping("/rccard-result/{rcCardId}")
-    public String getCardResult(@PathVariable Integer rcCardId, Model model){
-        Optional<RomanticCard> rcCard = romanticCardRepository.findAllById(rcCardId);
-        if(rcCard.isPresent()){
+    @GetMapping("/romantic/result/{rcid}")
+    public String getCardResult(@PathVariable("rcid") Integer rcid, Model model) {
+        Optional<RomanticCard> rcCard = romanticCardRepository.findById(rcid);
+        if (rcCard.isPresent()) {
             model.addAttribute("rcCard", rcCard.get());
-            return "cardresult_page";
-        }else{
-            return "redirect:/main";
+            return "cardresult_page"; // 정상적인 결과 페이지
+        }else {
+            throw new RuntimeException();
         }
     }
-
-
-
 }
