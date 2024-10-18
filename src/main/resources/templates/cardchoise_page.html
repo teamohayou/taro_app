@@ -3,21 +3,13 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>.카드선택.</title>
+    <title>카드선택</title>
     <style>
-        .navbar-custom {
-            background-color: #ffb6c1; /* 배경을 연한 핑크색으로 */
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
         .navbar-custom .nav-link {
             color: #6a0dad; /* 진한 연보라색 글씨 */
             font-weight: bold; /* 글씨를 더 진하게 설정 */
         }
 
-        .navbar-custom .nav-link:hover {
-            color: #4b0082; /* 마우스 올렸을 때 더 진한 보라색 */
-        }
         body {
             background: linear-gradient(to bottom right, #ffb6c1, #ff77ff); /* 배경 색상 그라데이션 */
             height: 100vh; /* 전체 화면 높이 */
@@ -50,17 +42,17 @@
         }
 
         .card {
-        width: 100px;
-        height: 160px;
-        border-radius: 10px;
-        border: 2px solid #7a0dcf;
-        background: url('https://img.freepik.com/premium-vector/vector-kawaii-illustration-of-snake-and-tarot-cards-delicate-pastel-colors_750969-260.jpg');
-        background-size: cover;
-        background-position: center;  /* 이미지를 중앙에 위치 */
-        background-repeat: no-repeat;
-        transition: transform 0.3s ease;
-        margin-right: -70px; /* 카드 간의 겹침을 위해서 설정 */
-    }
+            width: 100px;
+            height: 160px;
+            border-radius: 10px;
+            border: 2px solid #7a0dcf;
+            background: url('https://img.freepik.com/premium-vector/vector-kawaii-illustration-of-snake-and-tarot-cards-delicate-pastel-colors_750969-260.jpg');
+            background-size: cover;
+            background-position: center;  /* 이미지를 중앙에 위치 */
+            background-repeat: no-repeat;
+            transition: transform 0.3s ease;
+            margin-right: -70px; /* 카드 간의 겹침을 위해서 설정 */
+        }
          /* 카드가 자연스럽게 겹치면서 좌우로 회전하도록 설정 */
         .card:nth-child(1) { transform: rotate(-7.8deg); }
         .card:nth-child(2) { transform: rotate(-7.6deg); }
@@ -150,13 +142,43 @@
 </head>
 <body>
 <nav th:replace="~{navbar :: navbarFragment}"></nav>
-<h1>당신의 카드를 뽑으세요 <span style="color: hotpink;">OHAYo 타로</span></h1>
-<h2>당신과 가장 강한 에너지 연결을 느끼는 카드를 선택하세요</h2>
-<h6>주로 사용하지 않는 손으로 뽑으시는 것을 추천드립니다</h6>
-<div class="card-container">
-    <div th:each="card : ${rcCardId}" class="card" th:data-id="${card.cardId}" th:onclick="'window.location.href=\'/categories/romantic/result/' + ${card.cardId} + '\';'">
-        <!-- 카드 뒷면만 표시, 클릭 시 결과 페이지로 이동 -->
-    </div>
-</div>
+    <h1>당신의 카드를 뽑으세요 <span style="color: hotpink;">OHAYo 타로</span></h1>
+    <h2>당신과 가장 강한 에너지 연결을 느끼는 카드를 선택하세요</h2>
+    <h6>주로 사용하지 않는 손으로 뽑으시는 것을 추천드립니다</h6>
+        <div class="card-container">
+            <div th:each="card : ${rcCardId}" class="card" th:data-id="${card.cardId}" th:onclick="'window.location.href=\'/categories/romantic/result/' + ${card.cardId} + '\';'">
+                <!-- 카드 뒷면만 표시, 클릭 시 결과 페이지로 이동 -->
+            </div>
+        </div>
+<button onclick="gatherCards()">다시 섞기</button>
+<script>
+    function gatherCards() {
+        const cards = Array.from(document.querySelectorAll('.card'));
+        const originalPositions = cards.map(card => card.getBoundingClientRect());
+        const originalTransforms = cards.map(card => card.style.transform);
+        const originalIds = cards.map(card => card.getAttribute('data-id'));
+        const shuffledIds = originalIds.sort(() => Math.random() - 0.5);
+
+        // 중앙으로 모으기
+        cards.forEach((card, index) => {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const cardX = originalPositions[index].left + originalPositions[index].width / 2;
+            const cardY = originalPositions[index].top + originalPositions[index].height / 2;
+            const translateX = centerX - cardX;
+            const translateY = centerY - cardY;
+            card.style.transition = 'transform 1s ease-in-out';
+            card.style.transform = `translate(${translateX}px, ${translateY}px) scale(1)`;
+        });
+
+        // 1초 후에 다시 펼치면서 카드 ID도 섞기
+        setTimeout(() => {
+            cards.forEach((card, index) => {
+                card.setAttribute('data-id', shuffledIds[index]);
+                card.style.transform = originalTransforms[index];
+            });
+        }, 1000);
+    }
+</script>
 </body>
 </html>
