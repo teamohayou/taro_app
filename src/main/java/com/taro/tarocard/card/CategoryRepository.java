@@ -1,5 +1,4 @@
-package com.taro.tarocard.category;
-
+package com.taro.tarocard.card;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
