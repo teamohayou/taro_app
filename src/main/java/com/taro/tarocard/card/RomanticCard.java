@@ -13,12 +13,12 @@ public class RomanticCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer rcid;
 
-    @Column(name = "card_id")
-    private Integer cardId;
+    @Column(name = "card_name")
+    private String cardname;
 
     @Column(name = "categoryname")
     private String categoryname;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 }

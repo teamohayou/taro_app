@@ -42,7 +42,7 @@ public class CardController {
             model.addAttribute("rcCard", rcCard.get());
             return "cardresult_page"; // 정상적인 결과 페이지
         }else {
-            throw new RuntimeException();
+            return "form_errors";
         }
     }
 }
