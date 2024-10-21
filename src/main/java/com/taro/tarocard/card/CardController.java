@@ -39,10 +39,12 @@ public class CardController {
     public String getCardResult(@PathVariable("rcid") Integer rcid, Model model) {
         Optional<RomanticCard> rcCard = romanticCardRepository.findById(rcid);
         if (rcCard.isPresent()) {
+            String imagePath = "/images/" + rcid + ".webp"; // ID를 기반으로 이미지 파일 경로 생성
             model.addAttribute("rcCard", rcCard.get());
+            model.addAttribute("imagePath", imagePath); // 이미지 경로를 모델에 추가
             return "cardresult_page"; // 정상적인 결과 페이지
         }else {
-            return "form_errors";
+            throw new RuntimeException("카드를 찾을 수 없습니다.");
         }
     }
 }
