@@ -3,7 +3,9 @@ package com.taro.tarocard.feedback;
 import com.taro.tarocard.user.SiteUser;
 import jakarta.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -13,6 +15,8 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Feedback {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

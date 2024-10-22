@@ -43,7 +43,6 @@ public class FeedbackController {
         if (principal == null) {
             throw new RuntimeException("인증된 사용자가 아닙니다.");
         }
-
         SiteUser user = userService.getUser(principal.getName());
         feedbackService.saveFeedback(form, user);
 
@@ -52,37 +51,39 @@ public class FeedbackController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String showEditFeedbackForm(@PathVariable Long id, FeedbackForm feedbackForm, Principal principal) {
+    public String modifyFeedback(@PathVariable ("id") Long id, FeedbackForm feedbackForm, Model model, Principal principal) {
         Feedback feedback = feedbackService.findById(id);
         checkFeedbackOwner(feedback, principal);
 
-        // 기존 피드백 데이터를 폼으로 설정
         feedbackForm.setTitle(feedback.getTitle());
         feedbackForm.setContent(feedback.getContent());
 
-        return "feedback_form"; // 수정 폼으로 이동
+        model.addAttribute("feedbackForm", feedbackForm);
+
+        return "feedback_form";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String modifyFeedback(@PathVariable Long id, @Valid FeedbackForm feedbackForm, BindingResult bindingResult, Principal principal) {
+    public String modifyFeedback(@PathVariable ("id") Long id, @Valid FeedbackForm feedbackForm, BindingResult bindingResult, Principal principal) {
         if (bindingResult.hasErrors()) {
-            return "feedback_form"; // 오류가 있을 경우 수정 폼으로 돌아감
+            return "feedback_form";
         }
 
         Feedback feedback = feedbackService.findById(id);
         checkFeedbackOwner(feedback, principal);
-        feedbackService.updateFeedback(id, feedbackForm); // 폼으로부터 데이터를 사용하여 피드백 수정
+        feedbackService.updateFeedback(id, feedbackForm);
 
-        return "redirect:/feedback"; // 수정 완료 후 피드백 목록으로 리다이렉트
+        return "redirect:/feedback";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String deleteFeedback(@PathVariable Long id, Principal principal) {
+    public String deleteFeedback(@PathVariable("id") Long id, Principal principal) {
         Feedback feedback = feedbackService.findById(id);
         checkFeedbackOwner(feedback, principal);
         feedbackService.deleteFeedback(id);
+        System.out.println(id);
         return "redirect:/feedback"; // 삭제 후 리다이렉트
     }
 
