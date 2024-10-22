@@ -1,6 +1,5 @@
 package com.taro.tarocard.user;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class UserCreateForm {
 
-    @Size(min=3,max=25)
+    @Size(min = 3, max = 25)
     @NotEmpty(message = "사용자ID는 필수항목입니다.")
     private String username;
 
@@ -21,6 +20,6 @@ public class UserCreateForm {
     private String password2;
 
     @NotEmpty(message = "닉네임은 필수항목입니다.")
-    private  String nickname;
+    private String nickname;
 
 }

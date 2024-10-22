@@ -11,12 +11,13 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.core.Authentication;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true) // 메서드 레벨 보안 사용
@@ -24,12 +25,13 @@ public class SecurityConfig {
     @Autowired
     @Lazy
     private CustomOAuth2UserService customOAuth2UserService;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable() // CSRF 보호 비활성화 (테스트 용도)
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("/user/login", "/user/signup", "/main","/card/list", "/categories/**", "/images/**", "/css/**", "/js/**").permitAll() // 로그인, 회원가입, 메인 페이지는 허용
+                        .requestMatchers("/user/login", "/user/signup", "/main", "/card/list", "/categories/**", "/images/**", "/css/**", "/js/**").permitAll() // 로그인, 회원가입, 메인 페이지는 허용
                         .requestMatchers("/profile/update").authenticated() // 프로필 업데이트 경로 인증 필요
                         .requestMatchers("/profile/**").authenticated() // 모든 프로필 관련 URL에 대해 인증 필요
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
@@ -53,6 +55,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     private LogoutSuccessHandler logoutSuccessHandler() {
         return (HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
             // 카카오 로그아웃을 위한 URL 설정

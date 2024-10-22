@@ -14,10 +14,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class UserService {
-    private  final UserRepository  userRepository;
-    private  final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public SiteUser create(String username, String password, String nickname, String s){
+    public SiteUser create(String username, String password, String nickname, String s) {
         SiteUser user = new SiteUser();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
@@ -25,9 +25,10 @@ public class UserService {
         this.userRepository.save(user);
         return user;
     }
-    @Transactional(readOnly=true)
-    public SiteUser getUserProfile(Long id){
-        return userRepository.findById(id).orElseThrow(()->new RuntimeException("사용자를 찾을 수 없습니다."));
+
+    @Transactional(readOnly = true)
+    public SiteUser getUserProfile(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
     }
 
@@ -47,6 +48,7 @@ public class UserService {
     public void updateUserProfile(SiteUser user) {
         userRepository.save(user); // user 객체를 데이터베이스에 저장하여 업데이트
     }
+
     @Transactional(readOnly = true)
     public SiteUser getUserById(Long id) {
         return userRepository.findById(id)
@@ -61,7 +63,7 @@ public class UserService {
         if (opSiteuer.isPresent()) return opSiteuer.get();
 
         // 소셜 로그인를 통한 가입시 비번은 없다.
-        return create(username, "",nickname, ""); // 최초 로그인 시 딱 한번 실행
+        return create(username, "", nickname, ""); // 최초 로그인 시 딱 한번 실행
     }
 
     private Optional<SiteUser> findByUsername(String username) {
