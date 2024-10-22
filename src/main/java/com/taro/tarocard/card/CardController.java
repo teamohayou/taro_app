@@ -1,8 +1,7 @@
 package com.taro.tarocard.card;
-import com.taro.tarocard.category.CategoryService;
-import com.taro.tarocard.category.Category;
-import com.taro.tarocard.category.CategoryService;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,21 +9,40 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/view/category")
+@RequestMapping("/categories")
 public class CardController {
+    @Autowired
     private final CardService cardService;
-    private final CategoryService categoryService;
+    @Autowired
+    private final RomanticCardRepository romanticCardRepository;
 
-    @GetMapping("/연애운")
-    public String getCardById (Model model) {
-        List<Category> categories = categoryService.findCategoriesByName("연애운");
+    @GetMapping
+    public String getCategories(Model model) {
+        List<Category> categories = cardService.getAllCategories();
         model.addAttribute("categories", categories);
-        return "cardchoise_page";
+        return "view_page"; // 변경할 HTML 템플릿 이름
     }
 
 
+    @GetMapping("/romantic")
+    public String romanticTaro (Model model) {
+        List<RomanticCard> rcCardId = cardService.getRandomRomanticCard();
+        model.addAttribute("rcCardId", rcCardId);
+        return "cardchoise_page";
+    }
 
+    @GetMapping("/romantic/result/{rcid}")
+    public String getCardResult(@PathVariable("rcid") Integer rcid, Model model) {
+        Optional<RomanticCard> rcCard = romanticCardRepository.findById(rcid);
+        if (rcCard.isPresent()) {
+            model.addAttribute("rcCard", rcCard.get());
+            return "cardresult_page"; // 정상적인 결과 페이지
+        }else {
+            return "form_errors";
+        }
+    }
 }

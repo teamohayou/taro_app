@@ -1,4 +1,4 @@
-package com.taro.tarocard.category;
+package com.taro.tarocard.card;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,6 +12,6 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column
     private String categoryname;
 }
