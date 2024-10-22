@@ -5,13 +5,88 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>피드백 목록</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .user-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .profile-image {
+      width: 20px; /* 가로 크기 */
+      height: 20px; /* 세로 크기 */
+      border-radius: 50%; /* 원형으로 만들기 */
+      margin-right: 10px; /* 닉네임과의 간격 */
+      object-fit: cover; /* 이미지 비율 유지하며 원형에 맞게 조정 */
+      object-position: center;
+    }
+
+    .nickname {
+      font-weight: bold;
+    }
+
+    .feedback-title {
+      margin-top: 5px;
+      margin-bottom: 20px;
+    }
+
+    .feedback-content {
+      margin-bottom: 25px; /* 내용과 버튼 간의 간격 증가 */
+    }
+
+    .button-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .left-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .right-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-custom-edit {
+      background-color: white; /* 배경을 흰색으로 */
+      color: black; /* 텍스트 색상을 검정으로 */
+      border: 1px solid black; /* 테두리 색상을 검정으로 */
+      margin-right: 10px; /* 삭제 버튼과의 간격 */
+    }
+
+    .btn-custom-delete {
+      background-color: black; /* 배경을 검정색으로 */
+      color: white; /* 텍스트 색상을 흰색으로 */
+      border: 1px solid white; /* 테두리 색상을 흰색으로 */
+    }
+
+    .btn-custom-write {
+      background-color: black; /* 배경을 검정색으로 */
+      color: white; /* 텍스트 색상을 흰색으로 */
+      border: 1px solid white; /* 테두리 색상을 흰색으로 */
+      margin-bottom: 40px;
+    }
+
+    .star-rating {
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+      font-size: 20px;
+    }
+  </style>
 </head>
 <body>
 
 <!-- 네비게이션 바 -->
 <nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light navbar-custom">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/main">타로</a>
+    <a class="navbar-brand" href="/main">OhayoTaro</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -20,19 +95,19 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item" sec:authorize="isAnonymous()">
-          <a class="nav-link" th:href="@{|/user/login|}">로그인</a>
+          <a class="nav-link" th:href="@{|/user/login|}">Login</a>
         </li>
         <li class="nav-item" sec:authorize="isAnonymous()">
-          <a class="nav-link" th:href="@{|/user/signup|}">회원가입</a>
+          <a class="nav-link" th:href="@{|/user/signup|}">Sign in</a>
         </li>
         <li class="nav-item" sec:authorize="isAuthenticated()">
-          <a class="nav-link" th:href="@{|/user/logout|}">로그아웃</a>
+          <a class="nav-link" th:href="@{|/user/logout|}">Logout</a>
         </li>
         <li class="nav-item" sec:authorize="isAuthenticated()">
-          <a class="nav-link" th:href="@{|/profile|}">프로필</a>
+          <a class="nav-link" th:href="@{|/profile|}">Profile</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:href="@{|/card/list|}">카드목록</a>
+          <a class="nav-link" th:href="@{|/card/list|}">Card list</a>
         </li>
       </ul>
     </div>
@@ -40,42 +115,48 @@
 </nav>
 
 <div class="container mt-5">
-  <h1 class="text-center">피드백 목록</h1>
+  <h1 class="text-center">Review List</h1>
 
   <div class="mb-3">
-    <a th:href="@{|/feedback/create|}" class="btn btn-primary">피드백 작성하기</a>
+    <a th:href="@{|/feedback/create|}" class="btn btn-custom-write">Write Review</a>
   </div>
 
   <!-- 피드백 목록 -->
   <div>
     <div th:each="feedback : ${feedbacks}">
-      <h3 th:text="${feedback.title}">피드백 제목</h3>
-      <p th:text="${feedback.content}">피드백 내용</p>
-      <p>작성자: <span th:text="${feedback.user.nickname}">닉네임</span></p>
-      <p>별점:
-        <span th:each="i : ${#numbers.sequence(1, feedback.rating)}">⭐</span>
-        <span th:each="i : ${#numbers.sequence(feedback.rating + 1, 5)}">✨</span>
-      </p>
-      <p>작성일: <span th:text="${#temporals.format(feedback.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</span></p>
-
-      <!-- 좋아요 버튼 추가 -->
-      <div>
-        <form th:action="@{/feedback/like/{id}(id=${feedback.id})}" method="post">
-          <button type="submit" class="btn btn-light">
-            <span>❤️</span> <!-- 빨간 하트 -->
-            <span th:text="${feedback.likes}">0</span> <!-- 좋아요 수 표시 -->
-          </button>
-        </form>
+      <div class="user-info">
+        <div>
+          <img th:src="${feedback.user.profileImageUrl}" alt="프로필 사진" class="profile-image" />
+          <span th:text="${feedback.user.nickname}" class="nickname"></span>
+        </div>
+        <div class="star-rating">
+          <span th:each="i : ${#numbers.sequence(1, feedback.rating)}">⭐</span>
+          <span th:each="i : ${#numbers.sequence(feedback.rating + 1, 5)}">✨</span>
+        </div>
       </div>
 
-      <!-- 수정 및 삭제 버튼 추가 -->
-      <div th:if="${feedback.user.username == #authentication.principal.username}">
-        <a th:href="@{|/feedback/modify/${feedback.id}|}" class="btn btn-warning">수정</a>
-        <a th:href="@{|/feedback/delete/${feedback.id}|}" class="btn btn-danger">삭제</a>
-      </div>
+      <h3 th:text="${feedback.title}" class="feedback-title">피드백 제목</h3>
+      <p th:text="${feedback.content}" class="feedback-content">피드백 내용</p>
 
-      <!-- 댓글 버튼 -->
-      <button class="btn btn-secondary mt-2" th:onclick="'toggleCommentForm(' + ${feedback.id} + ')'">댓글 작성</button>
+      <!-- 버튼 그룹 -->
+      <div class="button-group">
+        <!-- 왼쪽 버튼들 -->
+        <div class="left-buttons">
+          <form th:action="@{/feedback/like/{id}(id=${feedback.id})}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-light">
+              <span>❤️</span>
+              <span th:text="${feedback.likes}">0</span>
+            </button>
+          </form>
+          <button class="btn btn-secondary" th:onclick="'toggleCommentForm(' + ${feedback.id} + ')'">comment</button>
+        </div>
+
+        <!-- 수정 , 삭제 버튼 -->
+        <div class="right-buttons" th:if="${feedback.user.username == #authentication.principal.username}">
+          <a th:href="@{|/feedback/modify/${feedback.id}|}" class="btn btn-custom-edit">edit</a>
+          <a th:href="@{|/feedback/delete/${feedback.id}|}" class="btn btn-custom-delete">delete</a>
+        </div>
+      </div>
 
       <!-- 댓글 작성 폼 -->
       <div id="comment-form-[[${feedback.id}]]" class="comment-form mt-3" style="display: none;">
@@ -102,7 +183,6 @@
 </script>
 </body>
 </html>
-
 
 
 
