@@ -51,23 +51,20 @@ public class FeedbackController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modifyFeedback(@PathVariable ("id") Long id, FeedbackForm feedbackForm, Principal principal) {
+    public String modifyFeedback(@PathVariable ("id") Long id, FeedbackForm feedbackForm, Principal principal, Model model) {
         Feedback feedback = feedbackService.findById(id);
         checkFeedbackOwner(feedback, principal);
-
-
-
         feedbackForm.setTitle(feedback.getTitle());
         feedbackForm.setContent(feedback.getContent());
 
-        return "feedback_modify";
+        return "feedback_form";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String modifyFeedback(@PathVariable ("id") Long id, @Valid FeedbackForm feedbackForm, BindingResult bindingResult, Principal principal) {
         if (bindingResult.hasErrors()) {
-            return "feedback_modify";
+            return "feedback_form";
         }
 
         Feedback feedback = feedbackService.findById(id);
@@ -91,5 +88,13 @@ public class FeedbackController {
         if (!feedback.getUser().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "수정/삭제 권한이 없습니다.");
         }
+
+    }
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/like/{id}")
+    public String likeFeedback(@PathVariable("id") Long id, Principal principal){
+        Feedback feedback = feedbackService.findById(id);
+        feedbackService.addLike(feedback);
+        return "redirect:/feedback";
     }
 }

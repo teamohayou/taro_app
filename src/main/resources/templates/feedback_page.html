@@ -58,6 +58,16 @@
       </p>
       <p>작성일: <span th:text="${#temporals.format(feedback.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</span></p>
 
+      <!-- 좋아요 버튼 추가 -->
+      <div>
+        <form th:action="@{/feedback/like/{id}(id=${feedback.id})}" method="post">
+          <button type="submit" class="btn btn-light">
+            <span>❤️</span> <!-- 빨간 하트 -->
+            <span th:text="${feedback.likes}">0</span> <!-- 좋아요 수 표시 -->
+          </button>
+        </form>
+      </div>
+
       <!-- 수정 및 삭제 버튼 추가 -->
       <div th:if="${feedback.user.username == #authentication.principal.username}">
         <a th:href="@{|/feedback/modify/${feedback.id}|}" class="btn btn-warning">수정</a>
@@ -92,6 +102,7 @@
 </script>
 </body>
 </html>
+
 
 
 

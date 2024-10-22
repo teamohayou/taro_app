@@ -29,7 +29,7 @@ public class Feedback {
 
     private String content;
     private int rating;
-    private int likes;
+
 
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
@@ -40,5 +40,8 @@ public class Feedback {
     public String getAuthorName(){
         return this.user.getUsername();
     }
+
+    @Column(nullable = false)
+    private int likes = 0;
 
 }

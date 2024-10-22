@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -55,5 +57,9 @@ public class FeedbackService {
             throw new RuntimeException("삭제 권한이 없습니다.");
         }
         feedbackRepository.delete(feedback);
+    }
+    public void addLike(Feedback feedback){
+        feedback.setLikes(feedback.getLikes()+1);
+        feedbackRepository.save(feedback);
     }
 }
