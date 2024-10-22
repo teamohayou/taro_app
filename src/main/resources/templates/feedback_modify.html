@@ -1,3 +1,4 @@
+<!--
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -8,7 +9,7 @@
 </head>
 <body>
 
-<!-- 네비게이션 바 -->
+&lt;!&ndash; 네비게이션 바 &ndash;&gt;
 <nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light navbar-custom">
     <div class="container-fluid">
         <a class="navbar-brand" th:href="@{/main}">타로</a>
@@ -58,11 +59,11 @@
 
             <label for="rating" class="form-label">별점</label>
             <div class="star-rating mb-3 text-center">
-                <span data-value="1" onclick="setRating(1)">⭐</span>
-                <span data-value="2" onclick="setRating(2)">⭐</span>
-                <span data-value="3" onclick="setRating(3)">⭐</span>
-                <span data-value="4" onclick="setRating(4)">⭐</span>
-                <span data-value="5" onclick="setRating(5)">⭐</span>
+                <span data-value="1" onclick="setRating(1)"><img src="/images/star_filled.png" alt="1 Star" class="star"></span>
+                <span data-value="2" onclick="setRating(2)"><img src="/images/star_filled.png" alt="2 Star" class="star"></span>
+                <span data-value="3" onclick="setRating(3)"><img src="/images/star_filled.png" alt="3 Star" class="star"></span>
+                <span data-value="4" onclick="setRating(4)"><img src="/images/star_filled.png" alt="4 Star" class="star"></span>
+                <span data-value="5" onclick="setRating(5)"><img src="/images/star_filled.png" alt="5 Star" class="star"></span>
             </div>
             <input type="hidden" id="rating" name="rating" th:value="${feedback.rating}" value="0">
 
@@ -76,7 +77,7 @@
     function setRating(value) {
         const stars = document.querySelectorAll('.star-rating span');
         stars.forEach((star, index) => {
-            star.textContent = index < value ? '⭐' : '✨'; // 채워진 별과 빈 별을 이모티콘으로 변경
+            star.innerHTML = index < value ? '<img src="/images/star_filled.png" alt="Filled Star" class="star">' : '<img src="/images/star_empty.png" alt="Empty Star" class="star">'; // 채워진 별과 빈 별 이미지로 변경
         });
         document.getElementById('rating').value = value; // 숨겨진 입력에 값 저장
     }
@@ -84,3 +85,5 @@
 
 </body>
 </html>
+-->
+

@@ -15,8 +15,8 @@
     }
 
     .profile-image {
-      width: 20px; /* 가로 크기 */
-      height: 20px; /* 세로 크기 */
+      width: 40px; /* 가로 크기 */
+      height: 40px; /* 세로 크기 */
       border-radius: 50%; /* 원형으로 만들기 */
       margin-right: 10px; /* 닉네임과의 간격 */
       object-fit: cover; /* 이미지 비율 유지하며 원형에 맞게 조정 */
@@ -30,10 +30,12 @@
     .feedback-title {
       margin-top: 5px;
       margin-bottom: 20px;
+      font-size: 15px;
     }
 
     .feedback-content {
       margin-bottom: 25px; /* 내용과 버튼 간의 간격 증가 */
+      font-size: 18px;
     }
 
     .button-group {
@@ -46,6 +48,17 @@
     .left-buttons {
       display: flex;
       gap: 10px;
+    }
+
+    .left-buttons .btn-light {
+    background-color: transparent; /* 버튼 배경을 투명하게 */
+    border: none; /* 테두리 제거 */
+    padding: 0; /* 패딩 제거 (선택사항) */
+    color: inherit; /* 텍스트 색상을 상속받도록 설정 */
+    }
+
+    .left-buttons .btn-light:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* 호버 시 약간의 배경색 추가 (선택사항) */
     }
 
     .right-buttons {
@@ -79,6 +92,13 @@
       margin-left: auto;
       font-size: 20px;
     }
+
+    body {
+  background-image: url('/images/background.jpg'); /* 이미지 경로 설정 */
+  background-size: cover; /* 배경 이미지를 화면 크기에 맞게 조정 */
+  background-repeat: no-repeat; /* 이미지 반복 방지 */
+  background-position: center; /* 이미지 위치 설정 */
+}
   </style>
 </head>
 <body>
@@ -126,12 +146,18 @@
     <div th:each="feedback : ${feedbacks}">
       <div class="user-info">
         <div>
-          <img th:src="${feedback.user.profileImageUrl}" alt="프로필 사진" class="profile-image" />
+          <!-- 프로필 이미지 표시, 기본 이미지 추가 -->
+          <img th:src="${feedback.user.profileImageUrl != null ? feedback.user.profileImageUrl : '/images/basic_profile.png'}" alt="프로필 사진" class="profile-image" />
           <span th:text="${feedback.user.nickname}" class="nickname"></span>
         </div>
         <div class="star-rating">
-          <span th:each="i : ${#numbers.sequence(1, feedback.rating)}">⭐</span>
-          <span th:each="i : ${#numbers.sequence(feedback.rating + 1, 5)}">✨</span>
+          <!-- 별점 이미지 표시 -->
+          <span th:each="i : ${#numbers.sequence(1, feedback.rating)}">
+            <img src="/images/star_filled.png" alt="Filled Star" style="width: 20px; height: 20px;" />
+          </span>
+          <span th:if="${feedback.rating < 5}" th:each="i : ${#numbers.sequence(feedback.rating + 1, 5)}">
+            <img src="/images/star_empty.png" alt="Empty Star" style="width: 20px; height: 20px;" />
+          </span>
         </div>
       </div>
 
@@ -143,8 +169,8 @@
         <!-- 왼쪽 버튼들 -->
         <div class="left-buttons">
           <form th:action="@{/feedback/like/{id}(id=${feedback.id})}" method="post" style="display: inline;">
-            <button type="submit" class="btn btn-light">
-              <span>❤️</span>
+            <button type="submit" class="btn btn-light" style="display: flex; align-items: center;">
+              <img src="/images/heart.png" alt="Like" style="width: 20px; height: 20px; margin-right: 5px;" />
               <span th:text="${feedback.likes}">0</span>
             </button>
           </form>
@@ -183,6 +209,7 @@
 </script>
 </body>
 </html>
+
 
 
 
