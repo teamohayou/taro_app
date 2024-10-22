@@ -30,19 +30,21 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String oauthId = oAuth2User.getName();
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        Map attributesProperties = (Map) attributes.get("properties");
+        Map<String, Object> attributesProperties = (Map<String, Object>) attributes.get("properties");
         String nickname = (String) attributesProperties.get("nickname");
 
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
 
-        String username = providerTypeCode + "__%s".formatted(oauthId);
+        String username = String.format("%s__%s", providerTypeCode, oauthId);
 
+        // 사용자 로그인 처리 및 provider 설정
         SiteUser siteUser = userService.whenSocialLogin(providerTypeCode, username, nickname);
+        siteUser.setProvider(providerTypeCode); // provider 설정
 
         List<GrantedAuthority> authorityList = new ArrayList<>();
+        // 필요한 권한 추가 (예: ROLE_USER)
+        // authorityList.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-        return new CustomOAuth2User(siteUser.getUsername(), siteUser.getPassword(), authorityList);
+        return new CustomOAuth2User(siteUser.getUsername(), siteUser.getPassword(), authorityList, attributes);
     }
 }
-
-

@@ -23,4 +23,7 @@ public class SiteUser {
     @Column(unique = true)
     private String nickname;
 
+    @Column(nullable = false)
+    private String provider;
+
 }

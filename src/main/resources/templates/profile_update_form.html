@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,27 +58,54 @@
                 submitButton.disabled = false; // 버튼 활성화
             }
         }
+
+        // 페이지 로드 시 비밀번호 필드 설정
+        window.onload = function() {
+            const userProviderElement = document.getElementById('user-provider');
+            if (userProviderElement) {
+                const userProvider = userProviderElement.textContent.trim(); // 사용자 제공자 값을 가져옴
+                console.log('User Provider:', userProvider); // 콘솔에 사용자 제공자 출력
+
+                if (userProvider === 'KAKAO') {
+                    document.getElementById('password-section').style.display = 'none'; // 비밀번호 입력 필드 숨기기
+                    document.getElementById('confirm-password-section').style.display = 'none'; // 비밀번호 확인 필드 숨기기
+                    document.getElementById('error-message').style.display = 'none'; // 오류 메시지 숨기기
+                }
+            } else {
+                console.log('User provider element not found.');
+            }
+        }
     </script>
 </head>
 <body>
 <div class="container">
     <h2>프로필 업데이트</h2>
+
+    <!-- 사용자 제공자 정보를 표시하여 확인 -->
+    <p>사용자 제공자: <span id="user-provider" th:text="${user.provider}">UNKNOWN</span></p>
+
     <form action="/profile/update" method="post" onsubmit="return validatePasswords()">
         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         <input type="hidden" name="id" th:value="${user.id}"/> <!-- 사용자 ID -->
+
+        <!-- 사용자 제공자 정보 (숨김 처리) -->
+        <!--
+        <div id="user-provider" style="display: none;" th:text="${user.provider}"></div>
+        -->
 
         <div class="mb-3">
             <label for="nickname" class="form-label">닉네임:</label>
             <input type="text" id="nickname" name="nickname" class="form-control" th:value="${user.nickname}" required/>
         </div>
 
-        <div class="mb-3">
+        <!-- 비밀번호 입력 섹션 (일반 로그인 사용자만 보임) -->
+        <div id="password-section" class="mb-3">
             <label for="password" class="form-label">비밀번호:</label>
             <input type="password" id="password" name="password" class="form-control" oninput="validatePasswords()"/>
             <small class="form-text text-muted">비밀번호를 변경하려면 새 비밀번호를 입력하세요.</small>
         </div>
 
-        <div class="mb-3">
+        <div id="confirm-password-section" class="mb-3">
             <label for="confirm-password" class="form-label">비밀번호 확인:</label>
             <input type="password" id="confirm-password" name="confirmPassword" class="form-control" oninput="validatePasswords()"/>
             <small class="form-text text-muted">새 비밀번호를 다시 입력하세요.</small>
