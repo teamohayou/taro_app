@@ -39,10 +39,12 @@ public class CardController {
     public String getCardResult(@PathVariable("rcid") Integer rcid, Model model) {
         Optional<RomanticCard> rcCard = romanticCardRepository.findById(rcid);
         if (rcCard.isPresent()) {
-            model.addAttribute("rcCard", rcCard.get());
+            RomanticCard card = rcCard.get();
+            model.addAttribute("rcCard", card);
+            model.addAttribute("imagePath", card.getImage_path());
             return "cardresult_page"; // 정상적인 결과 페이지
         }else {
-            return "form_errors";
+            throw new RuntimeException("카드를 찾을 수 없습니다.");
         }
     }
 }
