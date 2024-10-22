@@ -32,6 +32,7 @@ public class Feedback {
     private int likes;
 
     private LocalDateTime createdAt;
+    private LocalDateTime updateAt;
 
     @OneToMany(mappedBy = "feedback", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();

@@ -19,15 +19,16 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "feedback_id", nullable = false)
-    private Feedback feedback; // 관련된 피드백
+    private Feedback feedback;
 
     @Column(nullable = false)
-    private String content; // 댓글 내용
+    private String content;
 
     @Column(nullable = false)
-    private String username; // 작성자 닉네임
+    private String username;
 
-    private LocalDateTime createdAt; // 작성일 (변경됨)
+    private LocalDateTime createdAt;
+    private LocalDateTime updateAt;
 
     // 생성자 추가: 피드백, 내용, 작성자 닉네임을 매개변수로 받아 초기화
     public Comment(Feedback feedback, String content, String username) {

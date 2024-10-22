@@ -51,28 +51,28 @@ public class FeedbackController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modifyFeedback(@PathVariable ("id") Long id, FeedbackForm feedbackForm, Model model, Principal principal) {
+    public String modifyFeedback(@PathVariable ("id") Long id, FeedbackForm feedbackForm, Principal principal) {
         Feedback feedback = feedbackService.findById(id);
         checkFeedbackOwner(feedback, principal);
+
+
 
         feedbackForm.setTitle(feedback.getTitle());
         feedbackForm.setContent(feedback.getContent());
 
-        model.addAttribute("feedbackForm", feedbackForm);
-
-        return "feedback_form";
+        return "feedback_modify";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     public String modifyFeedback(@PathVariable ("id") Long id, @Valid FeedbackForm feedbackForm, BindingResult bindingResult, Principal principal) {
         if (bindingResult.hasErrors()) {
-            return "feedback_form";
+            return "feedback_modify";
         }
 
         Feedback feedback = feedbackService.findById(id);
         checkFeedbackOwner(feedback, principal);
-        feedbackService.updateFeedback(id, feedbackForm);
+        feedbackService.updateFeedback(id, feedbackForm, feedback);
 
         return "redirect:/feedback";
     }

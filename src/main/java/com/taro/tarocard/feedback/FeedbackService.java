@@ -33,14 +33,15 @@ public class FeedbackService {
         feedbackRepository.save(feedback);
     }
 
-    public void updateFeedback(Long id, FeedbackForm form) {
-        Feedback feedback = feedbackRepository.findById(id).orElseThrow(() -> new RuntimeException("피드백을 찾을 수 없습니다."));
+    public void updateFeedback(Long id, FeedbackForm form, Feedback feedback) {
         if (!feedback.getUser().equals(userService.getCurrentUser())) {
             throw new RuntimeException("수정 권한이 없습니다.");
         }
         feedback.setTitle(form.getTitle());
         feedback.setContent(form.getContent());
         feedback.setRating(form.getRating());
+
+        feedback.setUpdateAt(LocalDateTime.now());
         feedbackRepository.save(feedback);
     }
 
