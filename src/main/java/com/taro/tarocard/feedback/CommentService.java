@@ -15,41 +15,50 @@ public class CommentService {
     private final UserService userService;
     private final FeedbackService feedbackService;
 
-    // 특정 피드백에 대한 댓글 목록을 작성일 기준으로 내림차순 정렬하여 가져오는 메서드
+
     public List<Comment> findByFeedbackIdOrderByCreatedAtDesc(Long feedbackId) {
         return commentRepository.findByFeedbackId(feedbackId);
     }
 
     // 댓글 저장 메서드
     public void saveComment(Long feedbackId, String content, String nickname) {
-        Feedback feedback = feedbackService.findById(feedbackId); // 피드백 객체 가져오기
+        Feedback feedback = feedbackService.findById(feedbackId);
         Comment comment = new Comment();
         comment.setContent(content);
-        comment.setFeedback(feedback); // 피드백 객체 설정
-        comment.setUsername(nickname); // 작성자 닉네임 설정
-        comment.setCreatedAt(LocalDateTime.now()); // 현재 시간 설정
-        commentRepository.save(comment); // 댓글 저장
+        comment.setFeedback(feedback);
+        comment.setUsername(nickname);
+        comment.setCreatedAt(LocalDateTime.now());
+        commentRepository.save(comment);
+
+        feedbackService.incrementCommentCount(feedbackId);
     }
 
 
-    // 댓글 수정 메서드
-    public void updateComment(Long commentId, CommentForm form) {
+    public void updateComment(Long commentId, String content, String nickname) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
-        if (!comment.getUsername().equals(userService.getCurrentUser().getNickname())) {
+
+        if (!comment.getUsername().equals(nickname)) {
             throw new RuntimeException("수정 권한이 없습니다.");
         }
-        comment.setContent(form.getContent());
-        commentRepository.save(comment); // 수정된 댓글 저장
+
+        comment.setContent(content);
+        comment.setUpdateAt(LocalDateTime.now());
+        commentRepository.save(comment);
     }
 
-    // 댓글 삭제 메서드
-    public void deleteComment(Long commentId) {
+
+    public void deleteComment(Long commentId, String nickname) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
-        if (!comment.getUsername().equals(userService.getCurrentUser().getNickname())) {
+
+        if (!comment.getUsername().equals(nickname)) {
             throw new RuntimeException("삭제 권한이 없습니다.");
         }
-        commentRepository.delete(comment); // 댓글 삭제
+
+        Feedback feedback = comment.getFeedback();
+        commentRepository.delete(comment);
+
+        feedbackService.decrementCommentCount(feedback.getId()); // feedback.getId()로 수정
     }
 }

@@ -49,6 +49,20 @@ public class CommentController {
 
         return "redirect:/feedback";
     }
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/comment/update/{commentId}")
+    public String updateComment(@PathVariable("commentId") Long commentId,
+                                @RequestParam("content") String content,
+                                Principal principal) {
+        commentService.updateComment(commentId, content, principal.getName());
+        return "redirect:/feedback";
+    }
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/comment/delete/{commentId}")
+    public String deleteComment(@PathVariable("commentId") Long commentId, Principal principal) {
+        commentService.deleteComment(commentId, principal.getName());
+        return "redirect:/feedback"; // 삭제 후 피드백 페이지로 리다이렉트
+    }
 
     @GetMapping("/feedback/details/{id}")
     public String getFeedbackDetails(@PathVariable("id") Long id, Model model) {

@@ -29,6 +29,7 @@ public class Feedback {
 
     private String content;
     private int rating;
+    private int commentCount;
 
 
     private LocalDateTime createdAt;

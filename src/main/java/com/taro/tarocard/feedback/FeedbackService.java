@@ -32,6 +32,7 @@ public class FeedbackService {
         feedback.setRating(form.getRating());
         feedback.setUser(userService.getCurrentUser());
         feedback.setCreatedAt(LocalDateTime.now());
+        feedback.setCommentCount(0);
         feedbackRepository.save(feedback);
     }
 
@@ -60,6 +61,17 @@ public class FeedbackService {
     }
     public void addLike(Feedback feedback){
         feedback.setLikes(feedback.getLikes()+1);
+        feedbackRepository.save(feedback);
+    }
+    public void incrementCommentCount(Long feedbackId) {
+        Feedback feedback = findById(feedbackId);
+        feedback.setCommentCount(feedback.getCommentCount() + 1);
+        feedbackRepository.save(feedback);
+    }
+
+    public void decrementCommentCount(Long feedbackId) {
+        Feedback feedback = findById(feedbackId);
+        feedback.setCommentCount(feedback.getCommentCount() - 1);
         feedbackRepository.save(feedback);
     }
 }

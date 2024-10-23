@@ -30,17 +30,23 @@ public class Comment {
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
 
+    private int commentCount;
+
 
     public Comment(Feedback feedback, String content, String username) {
         this.feedback = feedback;
         this.content = content;
         this.username = username;
         this.createdAt = LocalDateTime.now();
+        this.commentCount = 0;
     }
 
 
     public void updateContent(String newContent) {
         this.content = newContent;
         this.createdAt = LocalDateTime.now();
+    }
+    public void updateCommentCount(int count){
+        this.commentCount = count;
     }
 }

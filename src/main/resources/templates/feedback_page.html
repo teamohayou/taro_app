@@ -51,14 +51,14 @@
     }
 
     .left-buttons .btn-light {
-    background-color: transparent; /* 버튼 배경을 투명하게 */
-    border: none; /* 테두리 제거 */
-    padding: 0; /* 패딩 제거 (선택사항) */
-    color: inherit; /* 텍스트 색상을 상속받도록 설정 */
+      background-color: transparent; /* 버튼 배경을 투명하게 */
+      border: none; /* 테두리 제거 */
+      padding: 0; /* 패딩 제거 (선택사항) */
+      color: inherit; /* 텍스트 색상을 상속받도록 설정 */
     }
 
     .left-buttons .btn-light:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* 호버 시 약간의 배경색 추가 (선택사항) */
+      background-color: rgba(255, 255, 255, 0.2); /* 호버 시 약간의 배경색 추가 (선택사항) */
     }
 
     .right-buttons {
@@ -94,11 +94,25 @@
     }
 
     body {
-  background-image: url('/images/background.jpg'); /* 이미지 경로 설정 */
-  background-size: cover; /* 배경 이미지를 화면 크기에 맞게 조정 */
-  background-repeat: no-repeat; /* 이미지 반복 방지 */
-  background-position: center; /* 이미지 위치 설정 */
-}
+      background-image: url('/images/background.jpg'); /* 이미지 경로 설정 */
+      background-size: cover; /* 배경 이미지를 화면 크기에 맞게 조정 */
+      background-repeat: no-repeat; /* 이미지 반복 방지 */
+      background-position: center; /* 이미지 위치 설정 */
+    }
+
+    .like-button-img {
+      width: 22px; /* 하트 이미지 가로 크기 */
+      height: 22px; /* 하트 이미지 세로 크기 */
+      margin-right: 5px; /* 이미지와 텍스트 간격 */
+      vertical-align: middle;
+    }
+
+    .comment-button-img {
+      width: 20px; /* 댓글 이미지 가로 크기 */
+      height: 20px; /* 댓글 이미지 세로 크기 */
+      margin-right: 5px; /* 이미지와 텍스트 간격 */
+      vertical-align: middle;
+    }
   </style>
 </head>
 <body>
@@ -170,15 +184,17 @@
         <div class="left-buttons">
           <form th:action="@{/feedback/like/{id}(id=${feedback.id})}" method="post" style="display: inline;">
             <button type="submit" class="btn btn-light" style="display: flex; align-items: center;">
-              <img src="/images/heart.png" alt="Like" style="width: 20px; height: 20px; margin-right: 5px;" />
+              <img src="/images/heart.png" alt="Like" class="like-button-img" style="margin-right: 5px;" />
               <span th:text="${feedback.likes}">0</span>
             </button>
           </form>
-          <button class="btn btn-secondary" data-feedback-id="[[${feedback.id}]]" onclick="toggleCommentForm(this)">comment</button>
+          <!-- 댓글 버튼 이미지로 변경 -->
+          <button class="btn btn-light" data-feedback-id="[[${feedback.id}]]" onclick="toggleCommentForm(this)" style="display: flex; align-items: center;">
+            <img src="/images/chat.png" alt="Comment" class="comment-button-img" />
+            <span th:text="${#lists.size(feedback.comments)}">0</span>
+          </button>
         </div>
-
-
-        <!-- 수정 , 삭제 버튼 -->
+        <!-- 수정, 삭제 버튼 -->
         <div class="right-buttons" th:if="${feedback.user.username == #authentication.principal.username}">
           <a th:href="@{|/feedback/modify/${feedback.id}|}" class="btn btn-custom-edit">edit</a>
           <a th:href="@{|/feedback/delete/${feedback.id}|}" class="btn btn-custom-delete">delete</a>
@@ -199,9 +215,31 @@
       <!-- 댓글 목록 추가 부분 -->
       <div class="comments-list" id="comments-list-[[${feedback.id}]]" style="display: none;">
         <h4>댓글 목록</h4>
+
+        <!-- 댓글 수 표시 -->
+        <div class="comment-count">
+          <span th:text="${#lists.size(feedback.comments)}">0</span> 개의 댓글
+        </div>
+
         <ul>
           <th:block th:each="comment : ${feedback.comments}">
-            <li th:text="${comment.content}">댓글 내용</li>
+            <li>
+              <span th:text="${comment.content}">댓글 내용</span>
+
+              <!-- 댓글 수정 및 삭제 버튼 추가 -->
+              <div class="comment-buttons">
+                <form th:action="@{/comment/update/{commentId}(commentId=${comment.id})}" method="post" style="display: inline;">
+                  <input type="hidden" name="content" th:value="${comment.content}" />
+                  <button type="submit" class="btn btn-custom-edit">수정</button>
+                </form>
+
+                <form th:action="@{/comment/delete/{commentId}(commentId=${comment.id})}" method="post" style="display: inline;">
+                  <button type="submit" class="btn btn-custom-delete">삭제</button>
+                </form>
+              </div>
+              <!-- 댓글 수정 및 삭제 버튼 추가 끝 -->
+
+            </li>
           </th:block>
         </ul>
       </div>
