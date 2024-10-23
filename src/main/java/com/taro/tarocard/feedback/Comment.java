@@ -30,18 +30,17 @@ public class Comment {
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
 
-    // 생성자 추가: 피드백, 내용, 작성자 닉네임을 매개변수로 받아 초기화
+
     public Comment(Feedback feedback, String content, String username) {
         this.feedback = feedback;
         this.content = content;
         this.username = username;
-        this.createdAt = LocalDateTime.now(); // 작성일 설정
+        this.createdAt = LocalDateTime.now();
     }
 
-    // 추가: 작성일을 업데이트할 수 있는 메서드
+
     public void updateContent(String newContent) {
         this.content = newContent;
-        this.createdAt = LocalDateTime.now(); // 수정 시 현재 시간으로 업데이트
+        this.createdAt = LocalDateTime.now();
     }
 }
-

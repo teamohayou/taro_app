@@ -2,13 +2,16 @@ package com.taro.tarocard.feedback;
 
 import com.taro.tarocard.user.SiteUser;
 import com.taro.tarocard.user.UserService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -23,33 +26,38 @@ public class CommentController {
         this.userService = userService;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/comment/create")
-    public String addComment(@RequestParam Long feedbackId,
-                             @RequestParam String content,
-                             @AuthenticationPrincipal SiteUser user) {
+    public String addComment(@RequestParam("feedbackId") Long feedbackId,
+                             @RequestParam("content") String content,
+                             Principal principal
+                             ) {
         Feedback feedback = feedbackService.findById(feedbackId);
-        if (feedback == null) {
-            return "redirect:/error"; // 피드백이 없을 경우 에러 페이지로 리다이렉트
+        SiteUser user = userService.getUser(principal.getName());
+
+        if (user == null) {
+            return "redirect:/login";
         }
 
-        String nickname = user.getNickname(); // User 클래스에서 닉네임 가져오기
+        if (feedback == null) {
+            return "redirect:/error";
+        }
 
-        CommentForm form = new CommentForm();
-        form.setContent(content);
-        form.setUsername(nickname); // 댓글에 사용자 닉네임 설정
-        commentService.saveComment(feedbackId, form); // 댓글 저장
+        String nickname = user.getNickname();
 
-        return "redirect:/feedback/details?id=" + feedbackId; // 피드백 상세 페이지로 리다이렉트
+        commentService.saveComment(feedbackId, content, nickname);
+
+        return "redirect:/feedback";
     }
 
-    @GetMapping("/feedback/details")
-    public String getFeedbackDetails(@RequestParam Long id, Model model) {
+    @GetMapping("/feedback/details/{id}")
+    public String getFeedbackDetails(@PathVariable("id") Long id, Model model) {
         Feedback feedback = feedbackService.findById(id);
-        List<Comment> comments = commentService.findByFeedbackIdOrderByCreatedAtDesc(id); // 댓글 목록 가져오기
+        List<Comment> comments = commentService.findByFeedbackIdOrderByCreatedAtDesc(id);
 
         model.addAttribute("feedback", feedback);
         model.addAttribute("comments", comments);
-        return "feedback_page"; // 피드백 상세 페이지로 포워딩
+        return "feedback_page";
     }
 }
 

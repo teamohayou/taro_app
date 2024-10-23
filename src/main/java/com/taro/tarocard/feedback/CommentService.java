@@ -21,12 +21,12 @@ public class CommentService {
     }
 
     // 댓글 저장 메서드
-    public void saveComment(Long feedbackId, CommentForm form) {
+    public void saveComment(Long feedbackId, String content, String nickname) {
         Feedback feedback = feedbackService.findById(feedbackId); // 피드백 객체 가져오기
         Comment comment = new Comment();
-        comment.setContent(form.getContent());
+        comment.setContent(content);
         comment.setFeedback(feedback); // 피드백 객체 설정
-        comment.setUsername(userService.getCurrentUser().getNickname()); // 작성자 닉네임 설정
+        comment.setUsername(nickname); // 작성자 닉네임 설정
         comment.setCreatedAt(LocalDateTime.now()); // 현재 시간 설정
         commentRepository.save(comment); // 댓글 저장
     }
