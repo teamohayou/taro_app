@@ -26,7 +26,8 @@ public class CommentService {
         Comment comment = new Comment();
         comment.setContent(content);
         comment.setFeedback(feedback);
-        comment.setUsername(nickname);
+        comment.setUsername(nickname); // 이 부분을 nickname으로 변경
+        comment.setNickname(nickname); // 닉네임도 세팅
         comment.setCreatedAt(LocalDateTime.now());
         commentRepository.save(comment);
 

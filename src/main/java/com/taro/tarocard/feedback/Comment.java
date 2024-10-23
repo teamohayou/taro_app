@@ -27,16 +27,20 @@ public class Comment {
     @Column(nullable = false)
     private String username;
 
+    @Column(nullable = false)
+    private String nickname;
+
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
 
     private int commentCount;
 
 
-    public Comment(Feedback feedback, String content, String username) {
+    public Comment(Feedback feedback, String content, String username, String nickname) {
         this.feedback = feedback;
         this.content = content;
         this.username = username;
+        this.nickname = nickname;
         this.createdAt = LocalDateTime.now();
         this.commentCount = 0;
     }

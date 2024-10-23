@@ -234,6 +234,7 @@
         <ul>
           <th:block th:each="comment : ${feedback.comments}">
             <li>
+              <span th:text="${comment.nickname}">닉네임</span>: <!-- 작성자 닉네임 추가 -->
               <span th:text="${comment.content}">댓글 내용</span>
 
               <!-- 댓글 수정 및 삭제 버튼 추가 -->
