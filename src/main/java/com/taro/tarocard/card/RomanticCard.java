@@ -21,4 +21,8 @@ public class RomanticCard {
 
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "image_path")
+    private String image_path;
+
 }
