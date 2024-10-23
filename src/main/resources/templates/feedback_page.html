@@ -208,17 +208,17 @@
           <div class="mb-3">
             <textarea name="content" class="form-control" placeholder="댓글을 입력하세요..." required></textarea>
           </div>
-          <button type="submit" class="btn btn-primary">submit</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>
 
       <!-- 댓글 목록 추가 부분 -->
       <div class="comments-list" id="comments-list-[[${feedback.id}]]" style="display: none;">
-        <h4>댓글 목록</h4>
+        <h4>Comment List</h4>
 
         <!-- 댓글 수 표시 -->
         <div class="comment-count">
-          <span th:text="${#lists.size(feedback.comments)}">0</span> 개의 댓글
+          <span th:text="${#lists.size(feedback.comments)}">0</span>
         </div>
 
         <ul>
@@ -230,15 +230,14 @@
               <div class="comment-buttons">
                 <form th:action="@{/comment/update/{commentId}(commentId=${comment.id})}" method="post" style="display: inline;">
                   <input type="hidden" name="content" th:value="${comment.content}" />
-                  <button type="submit" class="btn btn-custom-edit">수정</button>
+                  <button type="submit" class="btn btn-custom-edit">Edit</button>
                 </form>
 
                 <form th:action="@{/comment/delete/{commentId}(commentId=${comment.id})}" method="post" style="display: inline;">
-                  <button type="submit" class="btn btn-custom-delete">삭제</button>
+                  <button type="submit" class="btn btn-custom-delete">Delete</button>
                 </form>
               </div>
               <!-- 댓글 수정 및 삭제 버튼 추가 끝 -->
-
             </li>
           </th:block>
         </ul>
