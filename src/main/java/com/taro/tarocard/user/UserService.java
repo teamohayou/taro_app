@@ -5,10 +5,10 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
 
@@ -31,6 +31,7 @@ public class UserService {
         }
 
         user.setNickname(nickname);
+        user.setProvider("local");
         this.userRepository.save(user);
         return user;
     }
@@ -65,7 +66,7 @@ public class UserService {
     // 소셜 로그인 처리 메서드
     @Transactional
     public SiteUser whenSocialLogin(String providerTypeCode, String username, String nickname) {
-        Optional<SiteUser> opSiteUser = findByUsername(username);
+        Optional<SiteUser> opSiteUser = findByusername(username);
 
         if (opSiteUser.isPresent()) {
             // 이미 존재하는 사용자는 기존 사용자 정보 반환
@@ -75,8 +76,13 @@ public class UserService {
         // 소셜 로그인으로 최초 로그인 시 새로운 사용자 생성
         return create(username, "", nickname, providerTypeCode);
     }
-
-    private Optional<SiteUser> findByUsername(String username) {
+  private  Optional<SiteUser> findByusername(String username) {
         return userRepository.findByusername(username);
+  }
+
+    public SiteUser findByUsername(String username) {
+        return userRepository.findByusername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+
 }

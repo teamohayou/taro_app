@@ -1,6 +1,5 @@
 package com.taro.tarocard.user;
 
-import com.taro.tarocard.history.History;
 import com.taro.tarocard.history.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,8 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 
 @Controller
@@ -40,9 +37,7 @@ public class ProfileController {
         if (user == null) {
             return "redirect:/user/login"; // 로그인 페이지로 리다이렉트
         }
-        List<History> histories = historyService.findHistoriesByUser(user);
         model.addAttribute("user", user); // 사용자 정보를 모델에 추가
-        model.addAttribute("histories", histories);
         return "profile_form"; // profile_form.html 반환
     }
 
