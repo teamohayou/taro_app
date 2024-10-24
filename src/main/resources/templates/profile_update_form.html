@@ -105,6 +105,8 @@
             color: white;
         }
 
+
+
         .error-message {
             color: red;
             display: none; /* 초기에는 숨김 */
@@ -144,7 +146,7 @@
 <body>
 
 <nav>
-    <div>Profile Settings</div>
+    <div>Ohayo Tarot</div>
     <div>
         <a href="/main">home</a>
         <a href="#" th:href="@{/user/logout}" class="logout-btn">Log out</a>
@@ -182,7 +184,7 @@
         <div id="error-message" class="error-message">비밀번호가 일치하지 않습니다.</div>
 
         <div class="buttons">
-            <a href="/profile" style="font-size: 1.1rem; padding: 10px; background-color: #333; color: white; border: none; cursor: pointer; border-radius: 5px; display: inline-block; text-align: center;">
+            <a href="/profile" style="font-size: 1.1rem; padding: 10px; background-color: #333; color: white; border: none; cursor: pointer; border-radius: 5px; display: inline-block; text-align: center;  text-decoration: none;">
                 돌아가기
             </a>
             <button type="submit" id="submit-button" class="update">업데이트</button>

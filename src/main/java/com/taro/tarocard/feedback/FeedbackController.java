@@ -51,25 +51,30 @@ public class FeedbackController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
-    public String modifyFeedback(@PathVariable ("id") Long id, FeedbackForm feedbackForm, Principal principal, Model model) {
+    public String modifyFeedback(@PathVariable("id") Long id, FeedbackForm feedbackForm, Principal principal, Model model) {
         Feedback feedback = feedbackService.findById(id);
         checkFeedbackOwner(feedback, principal);
         feedbackForm.setTitle(feedback.getTitle());
         feedbackForm.setContent(feedback.getContent());
 
+        // 피드백 수정 폼에 기존 피드백의 ID를 전달합니다.
+        model.addAttribute("feedbackForm", feedbackForm);
+        model.addAttribute("feedbackId", id);
         return "feedback_form";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String modifyFeedback(@PathVariable ("id") Long id, @Valid FeedbackForm feedbackForm, BindingResult bindingResult, Principal principal) {
+    public String modifyFeedback(@PathVariable("id") Long id, @Valid FeedbackForm feedbackForm, BindingResult bindingResult, Principal principal) {
         if (bindingResult.hasErrors()) {
             return "feedback_form";
         }
 
         Feedback feedback = feedbackService.findById(id);
         checkFeedbackOwner(feedback, principal);
-        feedbackService.updateFeedback(id, feedbackForm, feedback);
+
+        // 피드백 업데이트 로직을 호출합니다.
+        feedbackService.updateFeedback(id, feedbackForm);
 
         return "redirect:/feedback";
     }
@@ -88,11 +93,11 @@ public class FeedbackController {
         if (!feedback.getUser().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "수정/삭제 권한이 없습니다.");
         }
-
     }
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/like/{id}")
-    public String likeFeedback(@PathVariable("id") Long id, Principal principal){
+    public String likeFeedback(@PathVariable("id") Long id, Principal principal) {
         Feedback feedback = feedbackService.findById(id);
         feedbackService.addLike(feedback);
         return "redirect:/feedback";

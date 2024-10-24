@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        @font-face {
+          font-family: 'Courgette'; /* 폰트 이름 설정 */
+          src: url('/fonts/Courgette-Regular.ttf') format('truetype'); /* 폰트 파일 경로 */
+          font-weight: normal;
+          font-style: normal;
+        }
+
+        /* 모든 요소에 폰트 적용 */
+        * {
+            font-family: 'Courgette', sans-serif; /* 모든 요소에 폰트 적용 */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        nav {
+            background-color: #333;
+            padding: 10px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 50px auto;
+            background: linear-gradient(to bottom, #f4f4f4, #d1c4e9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header {
+        display: flex;
+        align-items: flex-start; /* 상단 정렬 */
+        margin-bottom: 50px;
+    }
+
+        .profile-header img {
+            width: 300px; /* 이미지 크기 */
+            height: 300px;
+            border-radius: 50%;
+            background-color: #ccc;
+
+            margin: 30px 120px 10px 30px;
+        }
+
+        .contents {
+            display: flex;
+            gap: 16px;
+            width: 100%; /* 가로 폭 설정 */
+        }
+
+        .contents > div {
+            flex-grow: 1;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+.buttons button, .buttons a {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px; /* 동일한 글씨 크기 */
+    cursor: pointer;
+    display: inline-block; /* 버튼처럼 보이게 설정 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    background-color: #333; /* 배경색 검정 */
+    color: white; /* 글씨색 흰색 */
+    width: 100%; /* 버튼 크기 조정 (100% 너비) */
+    max-width: 150px; /* 최대 너비 설정 (필요시 조정) */
+}
+
+.buttons a {
+    text-decoration: none; /* 밑줄 제거 */
+}
+
+        .error-message {
+            color: red;
+            display: none; /* 초기에는 숨김 */
+        }
+
+    </style>
+    <script>
+        function validatePasswords() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const errorMessage = document.getElementById('error-message');
+            const submitButton = document.getElementById('submit-button');
+
+            if (password !== confirmPassword) {
+                errorMessage.style.display = 'block'; // 오류 메시지 표시
+                submitButton.disabled = true; // 버튼 비활성화
+            } else {
+                errorMessage.style.display = 'none'; // 오류 메시지 숨김
+                submitButton.disabled = false; // 버튼 활성화
+            }
+        }
+
+        window.onload = function() {
+            const userProviderElement = document.getElementById('user-provider');
+            if (userProviderElement) {
+                const userProvider = userProviderElement.textContent.trim();
+
+                if (userProvider === 'KAKAO') {
+                    document.getElementById('password-section').style.display = 'none';
+                    document.getElementById('confirm-password-section').style.display = 'none';
+                    document.getElementById('error-message').style.display = 'none';
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+
+<nav>
+    <div>Ohayo Tarot</div>
+    <div>
+        <a href="/main">home</a>
+        <a href="#" th:href="@{/user/logout}" class="logout-btn">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 style="text-align: center;">Profile Update</h2>
+
+
+
+    <div class="profile-header">
+        <div class="img-box">
+            <img th:src="${user.profileImageUrl != null ? user.profileImageUrl : '/images/basic_profile.png'}" alt="기본 프로필 이미지" class="profile-image">
+        </div>
+        <form action="/profile/update" method="post" onsubmit="return validatePasswords()">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <input type="hidden" name="id" th:value="${user.id}"/> <!-- 사용자 ID -->
+
+            <div class="mb-3">
+                <label for="nickname" class="form-label">nickname:</label>
+                <input type="text" id="nickname" name="nickname" class="form-control" th:value="${user.nickname}" required/>
+            </div>
+
+            <div id="password-section" class="mb-3">
+                <label for="password" class="form-label">password:</label>
+                <input type="password" id="password" name="password" class="form-control" oninput="validatePasswords()"/>
+                <small class="form-text text-muted">To change your password, please enter a new one.</small>
+            </div>
+
+            <div id="confirm-password-section" class="mb-3">
+                <label for="confirm-password" class="form-label">Re-enter Password:</label>
+                <input type="password" id="confirm-password" name="confirmPassword" class="form-control" oninput="validatePasswords()"/>
+                <small class="form-text text-muted">Please type your new password again.</small>
+            </div>
+
+            <div id="error-message" class="error-message">Passwords do not match.</div>
+
+            <div class="buttons">
+                <a href="/profile" style="font-size: 1.1rem; padding: 10px; background-color: #333; color: white; border: none; cursor: pointer; border-radius: 5px; display: inline-block; text-align: center; text-decoration: none;">
+                    Go back
+                </a>
+                <button type="submit" id="submit-button">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

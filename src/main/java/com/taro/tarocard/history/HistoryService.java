@@ -17,4 +17,5 @@ public class HistoryService {
     public List<History> findByUserId(Long userId) {
         return historyRepository.findByUserId(userId);
     }
+
 }
