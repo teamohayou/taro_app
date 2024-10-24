@@ -24,5 +24,4 @@ public class RomanticCard {
 
     @Column(name = "image_path")
     private String image_path;
-
 }

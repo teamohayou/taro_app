@@ -20,6 +20,4 @@ public class Card {
 
     @Column(name = "categoryname")
     private String category;
-
-
 }

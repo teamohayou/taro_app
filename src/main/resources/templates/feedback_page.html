@@ -269,19 +269,16 @@
             <li>
               <span th:text="${comment.nickname}">닉네임</span>: <!-- 작성자 닉네임 추가 -->
               <span th:text="${comment.content}">댓글 내용</span>
-
               <!-- 댓글 수정 및 삭제 버튼 추가 -->
               <div class="comment-buttons">
                 <form th:action="@{/comment/update/{commentId}(commentId=${comment.id})}" method="post" style="display: inline;">
                   <input type="hidden" name="content" th:value="${comment.content}" />
                   <button type="submit" class="btn btn-custom-edit">Edit</button>
                 </form>
-
                 <form th:action="@{/comment/delete/{commentId}(commentId=${comment.id})}" method="post" style="display: inline;">
                   <button type="submit" class="btn btn-custom-delete">Delete</button>
                 </form>
               </div>
-              <!-- 댓글 수정 및 삭제 버튼 추가 끝 -->
             </li>
           </th:block>
         </ul>

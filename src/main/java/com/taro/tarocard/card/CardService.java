@@ -37,7 +37,7 @@ public class CardService {
     public List<Category> getAllCategories () {
         return categoryRepository.findAll();
     }
-    public List<Category> getCategoryByName(String categoryname){
+    public Optional<Category> getCategoryByName(String categoryname){
         return categoryRepository.findByCategoryname(categoryname);
     }
 
