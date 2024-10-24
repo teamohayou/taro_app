@@ -94,10 +94,8 @@
     }
 
     body {
-      background-image: url('/images/background.jpg'); /* 이미지 경로 설정 */
-      background-size: cover; /* 배경 이미지를 화면 크기에 맞게 조정 */
-      background-repeat: no-repeat; /* 이미지 반복 방지 */
-      background-position: center; /* 이미지 위치 설정 */
+                 background: #dfc2ff;
+
     }
 
     .like-button-img {
@@ -166,7 +164,7 @@
 <!-- 네비게이션 바 -->
 <nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light navbar-custom">
   <div class="container-fluid">
-    <a class="navbar-brand" th:href="/main">OhayoTaro</a>
+    <a class="navbar-brand" th:href="@{/main}">OhayoTaro</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
