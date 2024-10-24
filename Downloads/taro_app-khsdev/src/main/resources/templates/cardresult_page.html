@@ -71,11 +71,6 @@
         </div>
     </div>
 </div>
-<form th:action="@{/saveHistory}" method="post">
-    <input type="hidden" name="cardId" th:value="${rcCard?.rcid}">
-    <input type="hidden" name="categoryname" th:value="${categoryname}">
-    <button type="submit" class="btn btn-primary mt-4">히스토리 저장</button>
-</form>
 </body>
 </html>
 

@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -64,22 +65,26 @@ public class HistoryController {
 
     @GetMapping("/history")
     public String viewHistory(Model model, Principal principal) {
-        try {
-            // 로그인된 사용자 정보 가져오기
-            String username = principal.getName();
-            SiteUser user = userService.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-            // 사용자의 히스토리 조회
-            List<History> histories = historyService.findByUserId(user.getId());
-
-            // 히스토리 데이터를 모델에 추가
-            model.addAttribute("histories", histories);
-            return "history_page"; // 히스토리 페이지로 이동
-        } catch (Exception e) {
-            e.printStackTrace(); // 예외의 전체 스택 트레이스 로그 출력
-            model.addAttribute("errorMessage", "히스토리 조회 중 오류가 발생했습니다: " + e.getMessage());
-            return "error_page"; // 오류 발생 시 오류 페이지로 이동
+        // 사용자가 로그인했는지 확인합니다.
+        if (principal == null) {
+            try {
+                throw new UnauthorizedException("로그인이 필요합니다.");
+            } catch (UnauthorizedException e) {
+                throw new RuntimeException(e);
+            }
         }
+
+        // 로그인된 사용자의 이름으로 SiteUser 객체를 조회합니다.
+        String username = principal.getName();
+        SiteUser user = userService.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // 해당 사용자의 히스토리 데이터를 조회합니다.
+        List<History> histories = historyService.findByUserId(user.getId());
+
+        // 조회된 히스토리 데이터를 모델에 추가합니다.
+        model.addAttribute("histories", histories);
+
+        return "history_page";  // history_page.html 템플릿으로 반환하여 출력합니다.
     }
 }
