@@ -23,7 +23,7 @@ public class HistoryController {
     @PostMapping("/saveHistory")
     public String saveHistory(@RequestParam Long cardId, Principal principal) {
         String username = principal.getName();
-        SiteUser user = userService.findByUsername(username);
+        SiteUser user = userService.findByusername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
@@ -35,7 +35,7 @@ public class HistoryController {
     @GetMapping("/history")
     public String viewHistory(Model model, Principal principal) {
         String username = principal.getName();
-        SiteUser user = userService.findByUsername(username);
+        SiteUser user = userService.findByusername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
