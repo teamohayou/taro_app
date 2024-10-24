@@ -23,10 +23,8 @@ public class HistoryController {
     @PostMapping("/saveHistory")
     public String saveHistory(@RequestParam Long cardId, Principal principal) {
         String username = principal.getName();
-        SiteUser user = userService.findByusername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
+        SiteUser user = userService.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         History history = new History(user, cardId, LocalDateTime.now());
         historyService.save(history);
         return "redirect:/history";
@@ -35,10 +33,8 @@ public class HistoryController {
     @GetMapping("/history")
     public String viewHistory(Model model, Principal principal) {
         String username = principal.getName();
-        SiteUser user = userService.findByusername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
+        SiteUser user = userService.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<History> histories = historyService.findByUserId(user.getId());
         model.addAttribute("histories", histories);
         return "history_page";

@@ -5,7 +5,6 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +39,14 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(()->new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 
-    // 현재 로그인한 사용자 정보를 가져오는 메서드
+
+    @Transactional(readOnly = true)
+    public SiteUser getUser(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    }
+
+
     public SiteUser getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
@@ -53,6 +59,7 @@ public class UserService {
     }
 
     // 사용자 프로필 업데이트 메서드
+    // 사용자 프로필 업데이트
     public void updateUserProfile(SiteUser user) {
         userRepository.save(user); // user 객체를 데이터베이스에 저장하여 업데이트
     }
@@ -76,13 +83,9 @@ public class UserService {
         // 소셜 로그인으로 최초 로그인 시 새로운 사용자 생성
         return create(username, "", nickname, providerTypeCode);
     }
-  private  Optional<SiteUser> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-  }
 
-    public SiteUser findByusername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public Optional<SiteUser> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
 }
