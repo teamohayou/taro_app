@@ -46,7 +46,7 @@ public class UserService {
         if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
             UserDetails userDetails = (UserDetails) auth.getPrincipal();
             String username = userDetails.getUsername();
-            return userRepository.findByusername(username)
+            return userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         }
         return null; // 로그인하지 않은 경우
