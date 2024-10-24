@@ -68,6 +68,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .welcome-section {
@@ -133,6 +134,7 @@
             border-radius: 5px;
             text-align: center;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .alert {
@@ -142,6 +144,13 @@
             border-radius: 5px;
             margin-bottom: 20px;
         }
+        .alert-success {
+    background-color: #333; /* 기본 초록색 */
+    color: white; /* 텍스트 색상 */
+    border: 1px solid #f4f4f4; /* 경계 색상 */
+    padding: 10px; /* 여백 */
+    border-radius: 5px; /* 모서리 둥글게 */
+}
     </style>
 </head>
 <body>
@@ -149,8 +158,8 @@
 <nav>
     <h1>Ohayo Tarot</h1>
     <div>
-        <a href="/main">home</a>
-        <a href="/card/list">cardlist</a>
+        <a href="/main">Home</a>
+        <a href="/card/list">Card List</a>
 
     </div>
 </nav>
@@ -212,7 +221,7 @@
         </div>
     </div>
 
-    <!-- Logout Button -->
+
     <!-- Logout Button -->
     <a href="#" th:href="@{/user/logout}" class="logout-btn">Log out</a>
 </div>
