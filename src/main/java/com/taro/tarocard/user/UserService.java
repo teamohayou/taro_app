@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
 
@@ -31,6 +30,7 @@ public class UserService {
         }
 
         user.setNickname(nickname);
+        user.setProvider("local");
         this.userRepository.save(user);
         return user;
     }
@@ -39,19 +39,27 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(()->new RuntimeException("사용자를 찾을 수 없습니다."));
     }
 
-    // 현재 로그인한 사용자 정보를 가져오는 메서드
+
+    @Transactional(readOnly = true)
+    public SiteUser getUser(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    }
+
+
     public SiteUser getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
             UserDetails userDetails = (UserDetails) auth.getPrincipal();
             String username = userDetails.getUsername();
-            return userRepository.findByusername(username)
+            return userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
         }
         return null; // 로그인하지 않은 경우
     }
 
     // 사용자 프로필 업데이트 메서드
+    // 사용자 프로필 업데이트
     public void updateUserProfile(SiteUser user) {
         userRepository.save(user); // user 객체를 데이터베이스에 저장하여 업데이트
     }
@@ -76,7 +84,8 @@ public class UserService {
         return create(username, "", nickname, providerTypeCode);
     }
 
-    private Optional<SiteUser> findByUsername(String username) {
-        return userRepository.findByusername(username);
+    public Optional<SiteUser> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
+
 }
