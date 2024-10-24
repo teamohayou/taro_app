@@ -71,5 +71,9 @@
         </div>
     </div>
 </div>
+<form th:action="@{/saveHistory}" method="post">
+    <input type="hidden" name="resultDescription" th:value="${resultDescription}">
+    <button type="submit">히스토리 저장</button>
+</form>
 </body>
 </html>

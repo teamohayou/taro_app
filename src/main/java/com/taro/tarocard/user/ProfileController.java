@@ -1,12 +1,17 @@
 package com.taro.tarocard.user;
 
-import lombok.RequiredArgsConstructor;
+import com.taro.tarocard.history.History;
+import com.taro.tarocard.history.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 
 @Controller
@@ -16,21 +21,28 @@ public class ProfileController {
     private final UserService userService;
     private final ProfileService profileService;
     private final PasswordEncoder passwordEncoder;
+    private final HistoryService historyService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ProfileController(UserService userService, ProfileService profileService, PasswordEncoder passwordEncoder) {
+    public ProfileController(UserService userService, ProfileService profileService, PasswordEncoder passwordEncoder, HistoryService historyService, UserRepository userRepository) {
         this.userService = userService;
         this.profileService = profileService;
         this.passwordEncoder = passwordEncoder;
+        this.historyService = historyService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping
-    public String viewProfile(Model model) {
+    public String viewProfile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        String nickname = userDetails.getUsername();
         SiteUser user = userService.getCurrentUser(); // 현재 로그인한 사용자 정보 가져오기
         if (user == null) {
             return "redirect:/user/login"; // 로그인 페이지로 리다이렉트
         }
+        List<History> histories = historyService.findHistoriesByUser(user);
         model.addAttribute("user", user); // 사용자 정보를 모델에 추가
+        model.addAttribute("histories", histories);
         return "profile_form"; // profile_form.html 반환
     }
 
