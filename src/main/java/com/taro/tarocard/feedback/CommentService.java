@@ -17,7 +17,7 @@ public class CommentService {
 
 
     public List<Comment> findByFeedbackIdOrderByCreatedAtDesc(Long feedbackId) {
-        return commentRepository.findByFeedbackId(feedbackId);
+        return commentRepository.findByFeedbackIdOrderByCreatedAtDesc(feedbackId);
     }
 
     // 댓글 저장 메서드

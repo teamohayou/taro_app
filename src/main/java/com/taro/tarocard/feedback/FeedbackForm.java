@@ -10,6 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class FeedbackForm {
+
     private String title;
     private String content;
     private int rating;

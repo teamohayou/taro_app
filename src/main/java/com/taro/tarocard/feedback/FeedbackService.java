@@ -32,20 +32,20 @@ public class FeedbackService {
     }
 
     public void updateFeedback(Long id, FeedbackForm form) {
-        Feedback feedback = findById(id); // 피드백을 ID로 찾습니다.
+        Feedback feedback = findById(id); // ID로 피드백 찾기
 
-        // 현재 사용자와 피드백의 소유자가 일치하는지 확인합니다.
+        // 현재 사용자가 피드백 소유자인지 확인
         if (!feedback.getUser().equals(userService.getCurrentUser())) {
             throw new RuntimeException("수정 권한이 없습니다.");
         }
 
-        // 피드백의 필드 업데이트
+        // 피드백 데이터 업데이트
         feedback.setTitle(form.getTitle());
         feedback.setContent(form.getContent());
         feedback.setRating(form.getRating());
-        feedback.setUpdateAt(LocalDateTime.now());
+        feedback.setUpdateAt(LocalDateTime.now()); // 수정 시간 갱신
 
-        feedbackRepository.save(feedback); // 피드백을 업데이트합니다.
+        feedbackRepository.save(feedback); // 변경 사항 저장
     }
 
     public Feedback findById(Long id) {

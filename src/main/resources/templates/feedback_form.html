@@ -8,7 +8,6 @@
   <style>
     body {
       background: #dfc2ff;
-
       color: #000; /* 텍스트 색상 변경 (검정색) */
     }
     .container {
@@ -75,7 +74,7 @@
 
   <div class="feedback-form">
     <!-- 하나의 form으로 통합 -->
-    <form th:action="@{/feedback/create}" method="post" class="mb-4" onsubmit="return validateForm()">
+    <form th:action="@{${feedbackId} != null ? '/feedback/modify/' + ${feedbackId} : '/feedback/create'}" method="post" class="mb-4" onsubmit="return validateForm()">
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
         <input type="text" id="title" name="title" class="form-control" required th:value="${feedbackForm.title}">

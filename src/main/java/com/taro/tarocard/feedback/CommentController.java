@@ -25,7 +25,6 @@ public class CommentController {
         this.userService = userService;
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/comment/create")
     public String addComment(@RequestParam("feedbackId") Long feedbackId,
                              @RequestParam("content") String content,
@@ -46,7 +45,7 @@ public class CommentController {
 
         commentService.saveComment(feedbackId, content, nickname);
 
-        return "redirect:/feedback";
+        return "redirect:/feedback/details/" + feedbackId; // 피드백 상세 페이지로 리다이렉트
     }
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/comment/update/{commentId}")
@@ -70,6 +69,6 @@ public class CommentController {
 
         model.addAttribute("feedback", feedback);
         model.addAttribute("comments", comments);
-        return "feedback_page";
+        return "feedback_page"; // 피드백 페이지로 리다이렉트
     }
 }

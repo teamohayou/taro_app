@@ -6,5 +6,5 @@ import java.util.List;
 
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByFeedbackId(Long feedbackId); // 피드백 ID로 댓글 목록 조회
+    List<Comment> findByFeedbackIdOrderByCreatedAtDesc(Long feedbackId); // 피드백 ID로 댓글 목록 조회
 }
