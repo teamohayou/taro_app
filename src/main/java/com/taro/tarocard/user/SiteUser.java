@@ -24,6 +24,10 @@ public class SiteUser {
     @OneToMany(mappedBy = "user")
     private List<History> historys;
 
-    @Column(unique = true, nullable = false)
-    private  String nickname;
+    @Column(unique = true)
+    private String nickname;
+
+    @Column(nullable = false)
+    private String provider;
+
 }

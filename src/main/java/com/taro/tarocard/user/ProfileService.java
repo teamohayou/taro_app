@@ -4,11 +4,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 public class ProfileService {
-    private  final UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public void updateUserProfile(SiteUser user) {
