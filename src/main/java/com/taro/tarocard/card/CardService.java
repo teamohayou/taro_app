@@ -22,7 +22,6 @@ public class CardService {
     public Card getCardById (Integer id){
         return this.cardRepository.findAllById(id);
     }
-
     public Optional<RomanticCard> getCardByRcCardId(Integer rcCardId){
         return romanticCardRepository.findAllByRcid(rcCardId);
     }
@@ -41,4 +40,8 @@ public class CardService {
         return categoryRepository.findByCategoryname(categoryname);
     }
 
+    public RomanticCard findById(Integer cardId) {
+        return romanticCardRepository.findByRcid(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found with ID: " + cardId));
+    }
 }

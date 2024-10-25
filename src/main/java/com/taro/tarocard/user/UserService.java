@@ -87,5 +87,8 @@ public class UserService {
     public Optional<SiteUser> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
-
+    public SiteUser findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+    }
 }

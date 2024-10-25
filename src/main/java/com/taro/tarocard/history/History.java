@@ -27,25 +27,16 @@ public class History {
     @JoinColumn(name = "card_id", nullable = false)
     private RomanticCard card;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category categoryname;
-
-    @Column(nullable = false)
-    private String cardname;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String description;
-
     @Column(nullable = false)
     private LocalDateTime savedAt;
 
-    public History(SiteUser user, RomanticCard card, String cardname, String description, Category category, LocalDateTime savedAt) {
+    @Column(name = "categoryname", nullable = false)
+    private String categoryname;
+
+    public History(SiteUser user, RomanticCard card, LocalDateTime savedAt, String categoryname) {
         this.user = user;
         this.card = card;
-        this.cardname = cardname;
-        this.description = description;
-        this.categoryname = categoryname;
         this.savedAt = savedAt;
+        this.categoryname = categoryname;
     }
 }
