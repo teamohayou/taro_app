@@ -4,158 +4,172 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>피드백 목록</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courgette&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    .user-info {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      width: 100%;
-    }
+    @font-face {
+           font-family: 'Courgette'; /* 폰트 이름 설정 */
+           src: url('/fonts/Courgette-Regular.ttf') format('truetype'); /* 폰트 파일 경로 */
+           font-weight: normal;
+           font-style: normal;
+       }
 
-    .profile-image {
-      width: 40px; /* 가로 크기 */
-      height: 40px; /* 세로 크기 */
-      border-radius: 50%; /* 원형으로 만들기 */
-      margin-right: 10px; /* 닉네임과의 간격 */
-      object-fit: cover; /* 이미지 비율 유지하며 원형에 맞게 조정 */
-      object-position: center;
-    }
+       /* 모든 요소에 폰트 적용 */
+       * {
+           font-family: 'Courgette', sans-serif; /* 모든 요소에 폰트 적용 */
+       }
+   .user-info {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     margin-bottom: 20px;
+     width: 100%;
+   }
 
-    .nickname {
-      font-weight: bold;
-    }
+   .profile-image {
+     width: 40px; /* 가로 크기 */
+     height: 40px; /* 세로 크기 */
+     border-radius: 50%; /* 원형으로 만들기 */
+     margin-right: 10px; /* 닉네임과의 간격 */
+     object-fit: cover; /* 이미지 비율 유지하며 원형에 맞게 조정 */
+     object-position: center;
+   }
 
-    .feedback-title {
-      margin-top: 5px;
-      margin-bottom: 20px;
-      font-size: 15px;
-    }
+   .nickname {
+     font-weight: bold;
+   }
 
-    .feedback-content {
-      margin-bottom: 25px; /* 내용과 버튼 간의 간격 증가 */
-      font-size: 18px;
-    }
+   .feedback-title {
+     margin-top: 5px;
+     margin-bottom: 20px;
+     font-size: 15px;
+   }
 
-    .button-group {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 15px;
-    }
+   .feedback-content {
+     margin-bottom: 25px; /* 내용과 버튼 간의 간격 증가 */
+     font-size: 18px;
+   }
 
-    .left-buttons {
-      display: flex;
-      gap: 10px;
-    }
+   .button-group {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     margin-bottom: 15px;
+   }
 
-    .left-buttons .btn-light {
-      background-color: transparent; /* 버튼 배경을 투명하게 */
-      border: none; /* 테두리 제거 */
-      padding: 0; /* 패딩 제거 (선택사항) */
-      color: inherit; /* 텍스트 색상을 상속받도록 설정 */
-    }
+   .left-buttons {
+     display: flex;
+     gap: 10px;
+   }
 
-    .left-buttons .btn-light:hover {
-      background-color: rgba(255, 255, 255, 0.2); /* 호버 시 약간의 배경색 추가 (선택사항) */
-    }
+   .left-buttons .btn-light {
+     background-color: transparent; /* 버튼 배경을 투명하게 */
+     border: none; /* 테두리 제거 */
+     padding: 0; /* 패딩 제거 (선택사항) */
+     color: inherit; /* 텍스트 색상을 상속받도록 설정 */
+   }
 
-    .right-buttons {
-      display: flex;
-      gap: 10px;
-    }
+   .left-buttons .btn-light:hover {
+     background-color: rgba(255, 255, 255, 0.2); /* 호버 시 약간의 배경색 추가 (선택사항) */
+   }
 
-    .btn-custom-edit {
-      background-color: white; /* 배경을 흰색으로 */
-      color: black; /* 텍스트 색상을 검정으로 */
-      border: 1px solid black; /* 테두리 색상을 검정으로 */
-      margin-right: 10px; /* 삭제 버튼과의 간격 */
-    }
+   .right-buttons {
+     display: flex;
+     gap: 10px;
+   }
 
-    .btn-custom-delete {
-      background-color: black; /* 배경을 검정색으로 */
-      color: white; /* 텍스트 색상을 흰색으로 */
-      border: 1px solid white; /* 테두리 색상을 흰색으로 */
-    }
+   .btn-custom-edit {
+     background-color: white; /* 배경을 흰색으로 */
+     color: black; /* 텍스트 색상을 검정으로 */
+     border: 1px solid black; /* 테두리 색상을 검정으로 */
+     margin-right: 10px; /* 삭제 버튼과의 간격 */
+   }
 
-    .btn-custom-write {
-      background-color: black; /* 배경을 검정색으로 */
-      color: white; /* 텍스트 색상을 흰색으로 */
-      border: 1px solid white; /* 테두리 색상을 흰색으로 */
-      margin-bottom: 40px;
-    }
+   .btn-custom-delete {
+     background-color: black; /* 배경을 검정색으로 */
+     color: white; /* 텍스트 색상을 흰색으로 */
+     border: 1px solid white; /* 테두리 색상을 흰색으로 */
+   }
 
-    .star-rating {
-      display: flex;
-      align-items: center;
-      margin-left: auto;
-      font-size: 20px;
-    }
+   .btn-custom-write {
+     background-color: black; /* 배경을 검정색으로 */
+     color: white; /* 텍스트 색상을 흰색으로 */
+     border: 1px solid white; /* 테두리 색상을 흰색으로 */
+     margin-bottom: 40px;
+   }
 
-    body {
-                 background: #dfc2ff;
+   .star-rating {
+     display: flex;
+     align-items: center;
+     margin-left: auto;
+     font-size: 20px;
+   }
 
-    }
+   body {
+                background: #dfc2ff;
 
-    .like-button-img {
-      width: 22px; /* 하트 이미지 가로 크기 */
-      height: 22px; /* 하트 이미지 세로 크기 */
-      margin-right: 5px; /* 이미지와 텍스트 간격 */
-      vertical-align: middle;
-    }
+   }
 
-    .comment-button-img {
-      width: 20px; /* 댓글 이미지 가로 크기 */
-      height: 20px; /* 댓글 이미지 세로 크기 */
-      margin-right: 5px; /* 이미지와 텍스트 간격 */
-      vertical-align: middle;
-    }
-    .comments-list {
-    font-size: 12px;
-    background-color: rgba(255, 255, 255, 0.7); /* 약간 투명한 흰색 배경 */
-    padding: 15px;
-    border-radius: 5px;
-    margin-top: 10px;
+   .like-button-img {
+     width: 22px; /* 하트 이미지 가로 크기 */
+     height: 22px; /* 하트 이미지 세로 크기 */
+     margin-right: 5px; /* 이미지와 텍스트 간격 */
+     vertical-align: middle;
+   }
+
+   .comment-button-img {
+     width: 20px; /* 댓글 이미지 가로 크기 */
+     height: 20px; /* 댓글 이미지 세로 크기 */
+     margin-right: 5px; /* 이미지와 텍스트 간격 */
+     vertical-align: middle;
+   }
+   .comments-list {
+   font-size: 12px;
+   background-color: rgba(255, 255, 255, 0.7); /* 약간 투명한 흰색 배경 */
+   padding: 15px;
+   border-radius: 5px;
+   margin-top: 10px;
 
 }
 
 .comments-list ul li {
-    font-size: 14px; /* 글씨 크기를 작게 설정 */
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* 얇은 구분선 */
+   font-size: 14px; /* 글씨 크기를 작게 설정 */
+   padding: 10px 0;
+   border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* 얇은 구분선 */
 }
 
 .comments-list ul li:last-child {
-    border-bottom: none; /* 마지막 댓글 아래는 선을 없애기 */
+   border-bottom: none; /* 마지막 댓글 아래는 선을 없애기 */
 }
 
 
 .comment-form button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: black; /* 버튼 색상은 검정 */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+   margin-top: 10px;
+   padding: 10px 20px;
+   background-color: black; /* 버튼 색상은 검정 */
+   color: white;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
 }
 /* 댓글 작성 버튼 크기 줄이기 */
 .comment-form .btn-primary {
-    background-color: black;
-    border: none;
-    font-size: 12px; /* 글씨 크기 조정 */
-    padding: 5px 10px; /* 버튼 크기 조정 */
+   background-color: black;
+   border: none;
+   font-size: 12px; /* 글씨 크기 조정 */
+   padding: 5px 10px; /* 버튼 크기 조정 */
 }
 
 /* 댓글 수정/삭제 버튼 크기 줄이기 */
 .comment-buttons .btn-custom-edit,
 .comment-buttons .btn-custom-delete {
-    font-size: 12px; /* 글씨 크기 조정 */
-    padding: 5px 10px; /* 버튼 크기 조정 */
+   font-size: 12px; /* 글씨 크기 조정 */
+   padding: 5px 10px; /* 버튼 크기 조정 */
 }
-    .comment-list-title {
-    font-size: 14px; /* 원하는 크기로 설정 */
+   .comment-list-title {
+   font-size: 14px; /* 원하는 크기로 설정 */
 }
   </style>
 </head>
@@ -164,7 +178,7 @@
 <!-- 네비게이션 바 -->
 <nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-light navbar-custom">
   <div class="container-fluid">
-    <a class="navbar-brand" th:href="@{/main}">OhayoTaro</a>
+    <a class="navbar-brand" th:href="@{/main}">Ohayo Tarot</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -267,16 +281,19 @@
             <li>
               <span th:text="${comment.nickname}">닉네임</span>: <!-- 작성자 닉네임 추가 -->
               <span th:text="${comment.content}">댓글 내용</span>
+
               <!-- 댓글 수정 및 삭제 버튼 추가 -->
               <div class="comment-buttons">
                 <form th:action="@{/comment/update/{commentId}(commentId=${comment.id})}" method="post" style="display: inline;">
                   <input type="hidden" name="content" th:value="${comment.content}" />
                   <button type="submit" class="btn btn-custom-edit">Edit</button>
                 </form>
+
                 <form th:action="@{/comment/delete/{commentId}(commentId=${comment.id})}" method="post" style="display: inline;">
                   <button type="submit" class="btn btn-custom-delete">Delete</button>
                 </form>
               </div>
+              <!-- 댓글 수정 및 삭제 버튼 추가 끝 -->
             </li>
           </th:block>
         </ul>

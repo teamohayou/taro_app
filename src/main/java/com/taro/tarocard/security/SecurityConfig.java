@@ -29,10 +29,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable() // CSRF 보호 비활성화 (테스트 용도)
+                .csrf().disable()// CSRF 보호 비활성화 (테스트 용도)
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("/user/login", "/user/signup", "/main", "/card/list", "/feedback","/categories/**", "/images/**", "/css/**", "/js/**").permitAll() // 로그인, 회원가입, 메인 페이지는 허용
-                        .requestMatchers("/profile/update").authenticated() // 프로필 업데이트 경로 인증 필요
+                        .requestMatchers("/user/login", "/user/signup", "/main", "/card/list", "/feedback", "/categories/**", "/images/**", "/css/**", "/js/**").permitAll() // 로그인, 회원가입, 메인 페이지는 허용
+                        .requestMatchers("/profile/update", "/saveHistory").authenticated() // 프로필 업데이트 경로 인증 필요
                         .requestMatchers("/profile/**").authenticated() // 모든 프로필 관련 URL에 대해 인증 필요
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 )
